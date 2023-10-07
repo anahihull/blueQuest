@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const navigation = useNavigation(); 
 
   const authenticateUser = () => {
     if (!username || !password) {
@@ -17,6 +21,8 @@ const AuthPage = () => {
       // Insert login logic here, e.g., API call to your server to validate credentials
       if (username === 'user' && password === 'pass') {
         Alert.alert('Success', 'Logged in successfully');
+        setIsSuccess(true);
+        navigation.navigate('Main')
       } else {
         Alert.alert('Error', 'Invalid username or password');
       }
