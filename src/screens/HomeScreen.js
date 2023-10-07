@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: '', // Set an empty string to hide the title
+    });
+  }, []);
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>¡Bienvenido a mi aplicación React Native!</Text>

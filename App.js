@@ -15,10 +15,10 @@ const Stack = createStackNavigator();
 function TabNavigator() {
   return (
     <Tab.Navigator tabBar={(props) => <BottomNavbar {...props} />}>
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Learn" component={LearnScreen} />
-      <Tab.Screen name="Club" component={ClubScreen} />
-      <Tab.Screen name="Map" component={MapScreen} />
+      <Tab.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+      <Tab.Screen name="Learn" component={LearnScreen} options={{ headerShown: false }} />
+      <Tab.Screen name="Club" component={ClubScreen} options={{ headerShown: false }} />
+      <Tab.Screen name="Map" component={MapScreen} options={{ headerShown: false }} />
     </Tab.Navigator>
   );
 }
@@ -27,16 +27,8 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="AuthPage">
-        <Stack.Screen 
-          name="AuthPage" 
-          component={AuthPage} 
-          options={{ headerShown: false }} // Add this line to hide the header
-        />
-         <Stack.Screen
-        name="Main"
-        component={TabNavigator}
-        options={{headerShown: false}}
-        />
+        <Stack.Screen name="AuthPage" component={AuthPage} options={{ headerShown: false }} />
+        <Stack.Screen name="Main" component={TabNavigator} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
