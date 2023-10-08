@@ -12,10 +12,15 @@ const HomeScreen = ({ navigation }) => {
     navigation.navigate('AquaticFoodChainGame'); // Navigate to the 'AquaticFoodChainGame' screen
   };
 
+  const navigateToWaterConservationGame = () => {
+    navigation.navigate('WaterConservationGame'); // Navigate to the 'WaterConservationGame' screen
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>¡Bienvenido a mi aplicación React Native!</Text>
       <Button title="Start Aquatic Game" onPress={navigateToAquaticGame} />
+      <Button title="Start Water Conservation Game" onPress={navigateToWaterConservationGame} />
     </View>
   );
 };
