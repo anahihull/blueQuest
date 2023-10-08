@@ -71,7 +71,7 @@ const ClubScreen = () => {
       aspect: [4, 3],
     });
   
-    if (!result.cancelled) {
+    if (!result.canceled) {
       // Use the 'assets' array to get selected assets
       setImageAssets([result.assets[0]]);
       console.log('Image Assets:', result.assets); // Add this line for debugging
