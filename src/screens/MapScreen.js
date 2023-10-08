@@ -4,14 +4,7 @@ import MapView, { Marker } from 'react-native-maps';
 import {useState, useEffect} from 'react';
 import * as Location from 'expo-location';
 import { ActivityIndicator, ThemeProvider } from 'react-native-paper';
-import { NativeBaseProvider, Box, extendTheme, Button, Modal, VStack,  Container,
-  Header,
-  Content,
-  CardItem,
-  Card,
-  Text,
-  Heading,
-  Body,} from "native-base";
+import { NativeBaseProvider, Box, extendTheme, Button, Modal, Text, Heading} from "native-base";
 
 
 const GpsView = () => {
