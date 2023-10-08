@@ -4,7 +4,7 @@ import MapView, { Marker } from 'react-native-maps';
 import {useState, useEffect} from 'react';
 import * as Location from 'expo-location';
 import { ActivityIndicator, ThemeProvider } from 'react-native-paper';
-import { NativeBaseProvider, Box, extendTheme, Button, Card, Modal, VStack} from "native-base";
+import { NativeBaseProvider, Box, extendTheme, Button, Card, Modal, VStack, HStack, Spinner, Heading} from "native-base";
 
 const GpsView = () => {
 
@@ -111,10 +111,7 @@ const GpsView = () => {
   } else {
     return (
     <NativeBaseProvider>
-      <Box style={styles.loadingContainer}>
-        <ActivityIndicator animating={true} color='black'/>
-        <Text style={styles.loadingText}>Loading...</Text>
-      </Box>   
+      <Spinner color="primary.50" accessibilityLabel="Loading posts"/>
     </NativeBaseProvider>
     );
   }
