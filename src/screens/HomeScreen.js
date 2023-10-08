@@ -10,6 +10,10 @@ const HomeScreen = ({ navigation }) => {
     navigation.navigate('WaterConservationGame');
   };
 
+  const navigateToMarineAnimalList = () => {
+    navigation.navigate('MarineAnimalList');
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -30,6 +34,12 @@ const HomeScreen = ({ navigation }) => {
         Every time we lather on sunblock, we're protecting our skin from harmful UV rays, but let's not forget about the hidden impact on our delicate underwater ecosystems. Many sunscreens contain zinc oxide, which, while effective at safeguarding our skin, can be detrimental to coral reefs. As we frolic in crystal-clear waters, tiny particles of zinc wash off our bodies and end up in the ocean, where they can disrupt coral's natural defenses, contribute to coral bleaching, and harm marine life. The next time you enjoy the sun and sea, consider using reef-friendly sunblock formulations that protect you and our precious coral reefs, ensuring that future generations can continue to marvel at their beauty beneath the waves.
         </Text>
       </View>
+      <View style={styles.subtitleContainer}>
+        <Text style={styles.subtitleText}>Animals:</Text>
+      </View>
+      <TouchableOpacity style={styles.button} onPress={navigateToMarineAnimalList}>
+        <Text style={styles.buttonText}>See marine data</Text>
+      </TouchableOpacity>
     </View>
   );
 };
