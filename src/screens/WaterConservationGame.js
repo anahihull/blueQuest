@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, Image } from 'react-native';
+import { View, Text, Button, StyleSheet, Image, ImageBackground } from 'react-native';
 
 const WaterConservationGame = () => {
   const [score, setScore] = useState(0);
@@ -70,47 +70,52 @@ const WaterConservationGame = () => {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text style={{ fontSize: 24, marginBottom: 20 }}>Water Conservation Game</Text>
-      <Text style={{ fontSize: 18 }}>Score: {score}</Text>
-      <Text style={{ fontSize: 18 }}>Time Left: {timeLeft} seconds</Text>
-      <View style={styles.gameContainer}>
-        {faucets.map((faucet) => (
-          <View key={faucet.id} style={styles.faucetContainer}>
-            {faucet.isLeaking ? (
+    <ImageBackground
+      source={require('../../assets/background.jpg')} // Change to the path of your background image
+      style={styles.backgroundImage}
+    >
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ fontSize: 24, marginBottom: 20 }}>Water Conservation Game</Text>
+        <Text style={{ fontSize: 18 }}>Score: {score}</Text>
+        <Text style={{ fontSize: 18 }}>Time Left: {timeLeft} seconds</Text>
+        <View style={styles.gameContainer}>
+          {faucets.map((faucet) => (
+            <View key={faucet.id} style={styles.faucetContainer}>
+              {faucet.isLeaking ? (
+                <Image
+                  source={require('../../assets/leaking-faucet.png')}
+                  style={styles.faucetImage}
+                />
+              ) : null /* Render nothing for fixed faucets */}
+              {faucet.isLeaking && (
+                <Button
+                  title="Fix Faucet"
+                  onPress={() => handleFixFaucet(faucet.id)}
+                  disabled={!faucet.isLeaking}
+                />
+              )}
+            </View>
+          ))}
+        </View>
+        {fixedFaucets.map((fixedFaucet) => (
+          <View key={fixedFaucet.id}>
+            {fixedFaucet.isFixed && (
               <Image
-                source={require('../../assets/leaking-faucet.png')}
+                source={require('../../assets/fixed-faucet.png')}
                 style={styles.faucetImage}
-              />
-            ) : null /* Render nothing for fixed faucets */}
-            {faucet.isLeaking && (
-              <Button
-                title="Fix Faucet"
-                onPress={() => handleFixFaucet(faucet.id)}
-                disabled={!faucet.isLeaking}
               />
             )}
           </View>
         ))}
+        {gameOver && (
+          <View style={styles.gameOverContainer}>
+            <Text style={{ fontSize: 20, marginBottom: 20 }}>Game Over!</Text>
+            <Text style={{ fontSize: 20 }}>You won {score} points!</Text>
+            <Button title="Restart Game" onPress={restartGame} />
+          </View>
+        )}
       </View>
-      {fixedFaucets.map((fixedFaucet) => (
-        <View key={fixedFaucet.id}>
-          {fixedFaucet.isFixed && (
-            <Image
-              source={require('../../assets/fixed-faucet.png')}
-              style={styles.faucetImage}
-            />
-          )}
-        </View>
-      ))}
-      {gameOver && (
-        <View style={styles.gameOverContainer}>
-          <Text style={{ fontSize: 20, marginBottom: 20 }}>Game Over!</Text>
-          <Text style={{ fontSize: 20 }}>You won {score} points!</Text>
-          <Button title="Restart Game" onPress={restartGame} />
-        </View>
-      )}
-    </View>
+    </ImageBackground>
   );
 };
 
@@ -130,6 +135,10 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     resizeMode: 'contain',
+  },
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover', // You can adjust this to 'contain' if needed
   },
   gameOverContainer: {
     alignItems: 'center',
