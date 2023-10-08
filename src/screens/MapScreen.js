@@ -1,10 +1,18 @@
 import React from 'react';
-import { Text, View, StyleSheet} from 'react-native';
+import { View, StyleSheet, Image} from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import {useState, useEffect} from 'react';
 import * as Location from 'expo-location';
 import { ActivityIndicator, ThemeProvider } from 'react-native-paper';
-import { NativeBaseProvider, Box, extendTheme, Button, Card, Modal, VStack, HStack, Spinner, Heading} from "native-base";
+import { NativeBaseProvider, Box, extendTheme, Button, Modal, VStack,  Container,
+  Header,
+  Content,
+  CardItem,
+  Card,
+  Text,
+  Heading,
+  Body,} from "native-base";
+
 
 const GpsView = () => {
 
@@ -12,20 +20,8 @@ const GpsView = () => {
         colors: {
           // Add new color
             primary: {    
-            50: "#000080",
-            100: "#f5fffa",
-            200: "#000000",
-            300: "#7AC1E4",
-            400: "#47A9DA",
-            500: "#0088CC",
-            600: "#007AB8",
-            700: "#006BA1",
-            800: "#005885",
-            900: "#003F5E"
-          },
-          // Redefining only one shade, rest of the color will remain same.
-          amber: {
-            400: "#d97706"
+            50: "#00bfff",
+
           }
         },
         config: {
@@ -36,8 +32,8 @@ const GpsView = () => {
 
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  const [showCard, setShowCard] = useState(false);
-  const [message, setMessage] = useState('');
+  const [isModalVisible, setModalVisible] = useState(false);
+
 
   useEffect(() => {
     (async () => {
@@ -68,12 +64,14 @@ const GpsView = () => {
   }
 
   const openCard = () => {
-    setShowCard(true);
+    setModalVisible(true);
   };
+  
 
   const closeCard = () => {
-    setShowCard(false);
+    setModalVisible(false);
   };
+  
 
   if (coordx !== null && coordy !== null && coordx !== "undefined") {
     return (
@@ -95,23 +93,69 @@ const GpsView = () => {
                 />
                 </MapView>
 
-                <Button bg="primary.50" onPress={openCard}>What's up with my water?</Button>
+                <Button bg="primary.50" onPress={openCard}>
+                  <Heading style={{color: 'white'}}>
+                  What's up with my water?
+                  </Heading>
+                </Button>
 
-                <Modal isOpen={showCard} onClose={closeCard}>
-                    <VStack p={4} space={2} bg="primary.100" style={{ borderRadius: 10, width: 200, height: 200}}>
-                        
-                        <Text>My water</Text>
-                        <Text>Info</Text>
-                        <Button bg="primary.200" onPress={closeCard}>Close</Button>
-                    </VStack>
+                <Modal isOpen={isModalVisible} onClose={closeCard}>
+                  <Modal.Content maxWidth="100%">
+                    <Modal.Header>
+                      <Heading style={{color: '#00bfff'}}>
+                      What's up with my water?
+                        </Heading>
+                    </Modal.Header>
+                    <Modal.Body>
+
+                      <Heading size="md" style={{paddingTop: 10, color: '#696969'}}>Where does it come from?</Heading>
+                      <Text>Colorado River</Text>
+
+                      <Heading  size="md" style={{paddingTop: 10, color: '#696969'}}>What's up with the quality?</Heading>
+                      <Text>For human consumption</Text>
+
+                      <Heading  size="md" style={{paddingTop: 10, color: '#696969'}}>Can I swim today?</Heading>
+                      <Text>There's no swimming places at this area</Text>
+
+                      <Heading  size="md" style={{paddingTop: 10, color: '#696969'}}>What about marine species?</Heading>
+                      <Box style={{alignItems: 'center', paddingTop: 10}}>
+                        <Image source={require('../../assets/whale.jpg')} style={{width: 240, height: 200}} />
+                        <Heading size="xs" style={{color: '#696969'}}>Vaquit  a Porpoise (Phocoena sinus)</Heading>
+                        <Text style={{color: '#ff0000'}}>Critically endangered</Text>
+
+                        <Image source={require('../../assets/laudturtle.jpg')} style={{width: 240, height: 240}} />
+                        <Heading size="xs" style={{color: '#696969'}}>Leatherback Sea Turtle (Dermochelys coriacea)</Heading>
+                        <Text  style={{color: '#ff0000'}}>Critically endangered</Text>
+
+                        <Image source={require('../../assets/greenturtle.jpeg')} style={{width: 240, height: 240}} />
+                        <Heading size="xs" style={{color: '#696969'}}>Green Sea Turtle(Chelonia mydas)</Heading>
+                        <Text  style={{color: '#ff0000'}}>Critically endangered</Text>
+
+                        <Image source={require('../../assets/totoaba.jpg')} style={{width: 240, height: 240}} />
+                        <Heading size="xs" style={{color: '#696969'}}>Totoaba (Totoaba macdonaldi)</Heading>
+                        <Text  style={{color: '#ff0000'}}>Critically endangered</Text>
+
+                        <Image source={require('../../assets/bluewhale.jpg')} style={{width: 240, height: 240}} />
+                        <Heading size="xs" style={{color: '#696969'}}git >Blue Whale (Balaenoptera musculus)</Heading>
+                        <Text  style={{color: '#ff0000'}}>Critically endangered</Text>
+                      </Box>
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <Button onPress={closeCard}>Close</Button>
+                    </Modal.Footer>
+                  </Modal.Content>
                 </Modal>
+
             
         </NativeBaseProvider>
     );
   } else {
     return (
     <NativeBaseProvider>
-      <Spinner color="primary.50" accessibilityLabel="Loading posts"/>
+      <Box style={styles.loadingContainer}>
+        <ActivityIndicator animating={true} color='black'/>
+        <Text style={styles.loadingText}>Loading...</Text>
+      </Box>   
     </NativeBaseProvider>
     );
   }

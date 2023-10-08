@@ -17,25 +17,25 @@ const BottomNavbar = ({ navigation }) => {
         style={styles.tab}
         onPress={() => navigateToScreen('Home')}
       >
-        <Icon2 name="home" size={30} color="red" />
+        <Icon2 name="home" size={30} color="#87cefa" />
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.tab}
         onPress={() => navigateToScreen('Learn')}
       >
-        <Icon name="book" size={30} color="red" />
+        <Icon name="book" size={30} color="#87cefa" />
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.tab}
         onPress={() => navigateToScreen('Club')}
       >
-        <Icon name="user-friends" size={30} color="red" />
+        <Icon name="user-friends" size={30} color="#87cefa" />
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.tab}
         onPress={() => navigateToScreen('Map')}
       >
-        <Icon3 name="jellyfish" size={30} color="red" />
+        <Icon3 name="jellyfish" size={30} color="#87cefa" />
       </TouchableOpacity>
     </View>
   );
