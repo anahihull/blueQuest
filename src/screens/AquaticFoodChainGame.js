@@ -50,7 +50,9 @@ const AquaticFoodChainGame = () => {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text style={{ fontSize: 24, marginBottom: 20 }}>Aquatic Food Chain Game</Text>
-      <Text style={{ fontSize: 18 }}>Your Score: {score}</Text>
+      <View>
+        <Text style={{ fontSize: 18 }}>Your Score: {score}</Text>
+      </View>
       <Text style={{ fontSize: 18 }}>Time Left: {timer} seconds</Text>
       <View style={styles.gameContainer}>
         {creatures.map((creature) => (
@@ -74,6 +76,9 @@ const AquaticFoodChainGame = () => {
       {gameOver && (
         <View>
           <Text style={{ fontSize: 20, marginTop: 20 }}>Game Over!</Text>
+          <View>
+            <Text style={{ fontSize: 18 }}>You won {score} points!</Text>
+          </View>
           <Button title="Restart Game" onPress={restartGame} />
         </View>
       )}
