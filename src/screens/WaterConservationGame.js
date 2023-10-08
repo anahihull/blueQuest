@@ -5,26 +5,35 @@ const WaterConservationGame = () => {
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(30);
   const [faucets, setFaucets] = useState([]);
+  const [fixedFaucets, setFixedFaucets] = useState([]);
   const [gameOver, setGameOver] = useState(false);
 
   useEffect(() => {
     // Start the game loop
     const gameLoop = setInterval(() => {
-      // Update the timer
-      if (timeLeft > 0) {
-        setTimeLeft((prevTime) => prevTime - 1);
-      } else {
-        clearInterval(gameLoop);
-        setGameOver(true);
-      }
+      if (!gameOver) {
+        // Update the timer if the game is not over
+        if (timeLeft > 0) {
+          setTimeLeft((prevTime) => prevTime - 1);
+        } else {
+          clearInterval(gameLoop);
+          setGameOver(true);
+        }
 
-      // Randomly spawn leaking faucets
-      if (!gameOver && Math.random() < 0.5) {
-        const newFaucet = {
-          id: Date.now(),
-          isLeaking: true,
-        };
-        setFaucets((prevFaucets) => [...prevFaucets, newFaucet]);
+        // Randomly spawn leaking faucets
+        if (Math.random() < 0.5) {
+          const newFaucet = {
+            id: Date.now(),
+            isLeaking: true,
+          };
+          setFaucets((prevFaucets) => [...prevFaucets, newFaucet]);
+        }
+      } else {
+        // If the game is over, clear the interval
+        clearInterval(gameLoop);
+
+        // Remove all leaking faucets
+        setFaucets([]);
       }
     }, 1000);
 
@@ -33,6 +42,19 @@ const WaterConservationGame = () => {
   }, [timeLeft, gameOver]);
 
   const handleFixFaucet = (faucetId) => {
+    // Add the fixed faucet to the fixedFaucets state
+    setFixedFaucets((prevFixedFaucets) => [
+      ...prevFixedFaucets,
+      { id: faucetId, isFixed: true },
+    ]);
+
+    // Remove the fixed faucet after 2 seconds
+    setTimeout(() => {
+      setFixedFaucets((prevFixedFaucets) =>
+        prevFixedFaucets.filter((faucet) => faucet.id !== faucetId)
+      );
+    }, 2000);
+
     setScore((prevScore) => prevScore + 10);
 
     // Remove the fixed faucet from the state
@@ -43,6 +65,7 @@ const WaterConservationGame = () => {
     setScore(0);
     setTimeLeft(30);
     setFaucets([]);
+    setFixedFaucets([]);
     setGameOver(false);
   };
 
@@ -70,9 +93,20 @@ const WaterConservationGame = () => {
           </View>
         ))}
       </View>
+      {fixedFaucets.map((fixedFaucet) => (
+        <View key={fixedFaucet.id}>
+          {fixedFaucet.isFixed && (
+            <Image
+              source={require('../../assets/fixed-faucet.png')}
+              style={styles.faucetImage}
+            />
+          )}
+        </View>
+      ))}
       {gameOver && (
-        <View>
-          <Text style={{ fontSize: 20, marginTop: 20 }}>Game Over!</Text>
+        <View style={styles.gameOverContainer}>
+          <Text style={{ fontSize: 20, marginBottom: 20 }}>Game Over!</Text>
+          <Text style={{ fontSize: 20 }}>You won {score} points!</Text>
           <Button title="Restart Game" onPress={restartGame} />
         </View>
       )}
@@ -96,6 +130,10 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     resizeMode: 'contain',
+  },
+  gameOverContainer: {
+    alignItems: 'center',
+    marginTop: 20,
   },
 });
 

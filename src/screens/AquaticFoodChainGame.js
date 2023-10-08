@@ -8,26 +8,36 @@ const AquaticFoodChainGame = () => {
   const [gameOver, setGameOver] = useState(false);
 
   useEffect(() => {
-    // Start the game loop
-    const gameLoop = setInterval(() => {
-      // Update the timer
-      setTimer((prevTimer) => prevTimer - 1);
+    let gameLoop;
 
-      // Randomly spawn fish or plankton
-      if (!gameOver && Math.random() < 0.5) {
-        const newCreature = {
-          type: Math.random() < 0.5 ? 'fish' : 'plankton',
-          id: Date.now(),
-        };
-        setCreatures((prevCreatures) => [...prevCreatures, newCreature]);
-      }
+    if (!gameOver) {
+      // Start the game loop if the game is not over
+      gameLoop = setInterval(() => {
+        // Update the timer
+        setTimer((prevTimer) => prevTimer - 1);
 
-      // Check for game over
-      if (timer === 0) {
-        clearInterval(gameLoop);
-        setGameOver(true);
-      }
-    }, 1000);
+        // Randomly spawn fish or plankton
+        if (Math.random() < 0.5) {
+          const newCreature = {
+            type: Math.random() < 0.5 ? 'fish' : 'plankton',
+            id: Date.now(),
+          };
+          setCreatures((prevCreatures) => [...prevCreatures, newCreature]);
+        }
+
+        // Check for game over
+        if (timer === 0) {
+          clearInterval(gameLoop);
+          setGameOver(true);
+        }
+      }, 1000);
+    } else {
+      // Clear the interval if the game is over
+      clearInterval(gameLoop);
+
+      // Clear the creatures when the game is over
+      setCreatures([]);
+    }
 
     // Clean up the interval when the component unmounts
     return () => clearInterval(gameLoop);
