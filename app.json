@@ -1,18 +1,4 @@
 {
-  "permissions": [
-    "CAMERA",
-    "AUDIO_RECORDING",
-    "MEDIA_LIBRARY",
-    "CAMERA_ROLL",
-    "LOCATION",
-    "NOTIFICATIONS",
-    "BLUETOOTH",
-    "BLUETOOTH_PERIPHERAL",
-    "CONTACTS",
-    "MICROPHONE",
-    "SENSORS"
-  ],
-  
   "expo": {
     "name": "blue-quest",
     "slug": "blue-quest",
@@ -29,9 +15,14 @@
       "**/*"
     ],
     "ios": {
+      "infoPlist": {
+        "NSCameraUsageDescription": "We need your permission to access the camera",
+        "NSPhotoLibraryUsageDescription": "We need your permission to access photos"
+      },
       "supportsTablet": true
     },
     "android": {
+      "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -39,6 +30,13 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+
+    "permissions": [
+      "camera",
+      "audio",
+      "mediaLibrary"
+    ]
+
   }
 }
