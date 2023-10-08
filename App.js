@@ -10,6 +10,7 @@ import MapScreen from './src/screens/MapScreen';
 import BottomNavbar from './src/components/BottomNavbar';
 import AquaticFoodChainGame from './src/screens/AquaticFoodChainGame'; // Import your game component
 import WaterConservationGame from './src/screens/WaterConservationGame'; // Import your game component
+import GameScreen from './src/screens/wasteWarriors/GameScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -32,7 +33,7 @@ export default function App() {
         <Stack.Screen name="AuthPage" component={AuthPage} options={{ headerShown: false }} />
         <Stack.Screen name="Main" component={TabNavigator} options={{ headerShown: false }} />
         {/* Add a screen for your game */}
-        <Stack.Screen name="AquaticFoodChainGame" component={AquaticFoodChainGame} options={{ headerShown: false }} />
+        <Stack.Screen name="AquaticFoodChainGame" component={GameScreen} options={{ headerShown: true }} />
         <Stack.Screen name="WaterConservationGame" component={WaterConservationGame} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
