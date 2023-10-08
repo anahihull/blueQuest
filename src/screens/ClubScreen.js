@@ -25,7 +25,7 @@ const ClubScreen = () => {
   const [posts, setPosts] = useState([]);
   const [name, setName] = useState('');
   const [content, setContent] = useState('');
-  const [imageURI, setImageURI] = useState('');
+  const [imageAssets, setImageAssets] = useState([]);
   const [showAddPost, setShowAddPost] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
   const [isEditDialogVisible, setIsEditDialogVisible] = useState(false);
@@ -37,7 +37,7 @@ const ClubScreen = () => {
     if (!showAddPost) {
       setName('');
       setContent('');
-      setImageURI('');
+      setImageAssets([]);
     }
   };
 
@@ -50,7 +50,7 @@ const ClubScreen = () => {
       id: Date.now(),
       name,
       content,
-      imageURL: imageURI,
+      imageAssets,
     };
 
     setPosts([...posts, newPost]);
@@ -59,22 +59,26 @@ const ClubScreen = () => {
 
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
+  
     if (permissionResult.granted === false) {
       alert('Permission to access media library is required!');
       return;
     }
-
+  
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
     });
-
-    if (!result.cancelled) {
-      setImageURI(result.uri);
+  
+    if (!result.canceled) {
+      // Use the 'assets' array to get selected assets
+      setImageAssets([result.assets[0]]);
+      console.log('Image Assets:', result.assets); // Add this line for debugging
+    } else if (result.errorCode) {
+      console.error('Image picking error:', result.errorCode);
     }
-  };
+  };      
 
   const handleEditPost = () => {
     if (selectedPost && name.trim() !== '' && content.trim() !== '') {
@@ -82,7 +86,7 @@ const ClubScreen = () => {
         ...selectedPost,
         name,
         content,
-        imageURL: imageURI,
+        imageAssets,
       };
 
       const updatedPosts = posts.map((post) =>
@@ -94,7 +98,7 @@ const ClubScreen = () => {
       setSelectedPost(null);
       setName('');
       setContent('');
-      setImageURI('');
+      setImageAssets([]);
     }
   };
 
@@ -106,7 +110,7 @@ const ClubScreen = () => {
       setSelectedPost(null);
       setName('');
       setContent('');
-      setImageURI('');
+      setImageAssets([]);
     }
   };
 
@@ -138,8 +142,11 @@ const ClubScreen = () => {
                 multiline
               />
               <Button title="Pick an Image" onPress={pickImage} />
-              {imageURI !== '' && (
-                <Image source={{ uri: imageURI }} style={styles.previewImage} />
+              {imageAssets.length > 0 && (
+                <Image
+                  source={{ uri: imageAssets[0].uri }}
+                  style={styles.previewImage}
+                />
               )}
             </Card.Content>
             <Card.Actions>
@@ -156,16 +163,21 @@ const ClubScreen = () => {
                 setIsEditDialogVisible(true);
                 setName(post.name);
                 setContent(post.content);
-                setImageURI(post.imageURL);
-                nameInputRef.current.focus();
+                setImageAssets(post.imageAssets);
+                if (nameInputRef.current) {
+                  nameInputRef.current.focus();
+                }
               }}
             >
               <Card style={styles.post}>
                 <Card.Content>
                   <Title style={styles.postAuthor}>{post.name}</Title>
                   <Paragraph style={styles.postContent}>{post.content}</Paragraph>
-                  {post.imageURL && (
-                    <Image source={{ uri: post.imageURL }} style={styles.postImage} />
+                  {post.imageAssets.length > 0 && (
+                    <Image
+                      source={{ uri: post.imageAssets[0].uri }}
+                      style={styles.postImage}
+                    />
                   )}
                 </Card.Content>
               </Card>
@@ -195,13 +207,16 @@ const ClubScreen = () => {
               multiline
             />
             <Button title="Pick an Image" onPress={pickImage} />
-            {imageURI !== '' && (
-              <Image source={{ uri: imageURI }} style={styles.previewImage} />
+            {imageAssets.length > 0 && (
+              <Image
+                source={{ uri: imageAssets[0].uri }}
+                style={styles.previewImage}
+              />
             )}
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={handleEditPost}>Edit</Button>
-            <Button onPress={handleDeletePost}>Delete</Button>
+            <Button title="Delete" onPress={handleDeletePost}>Delete</Button>
+            <Button title="Done" onPress={handleEditPost}>Done</Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>
@@ -210,74 +225,48 @@ const ClubScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  appBar: {
-    backgroundColor: '#3f51b5',
-  },
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#f0f0f0',
+  },
+  appBar: {
+    backgroundColor: 'blue', // Change to your desired color
+  },
+  title: {
+    color: 'white', // Change to your desired text color
   },
   inputContainer: {
     marginBottom: 16,
-    borderRadius: 8,
-    elevation: 4,
-    backgroundColor: 'white',
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    marginBottom: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
-    fontSize: 16,
+    marginBottom: 8,
+    backgroundColor: '#f0f0f0', // Change to your desired background color
   },
   contentInput: {
     minHeight: 100,
-    textAlignVertical: 'top',
-    fontSize: 16,
+  },
+  previewImage: {
+    width: 200, // Adjust the width as needed
+    height: 150, // Adjust the height as needed
+    resizeMode: 'cover',
   },
   postContainer: {
-    flex: 1,
-    borderRadius: 8,
-    marginVertical: 16,
-    elevation: 4,
-    backgroundColor: 'white',
+    marginTop: 16,
   },
   post: {
     marginBottom: 16,
-    borderRadius: 8,
-    elevation: 2,
   },
   postAuthor: {
-    fontWeight: 'bold',
-    color: '#333',
     fontSize: 18,
-    marginBottom: 8,
+    fontWeight: 'bold',
   },
   postContent: {
-    color: '#666',
     fontSize: 16,
   },
   postImage: {
-    width: '100%',
-    height: 200,
+    width: '100%', // Adjust the width as needed
+    height: 200, // Adjust the height as needed
     resizeMode: 'cover',
-    borderRadius: 8,
-  },
-  previewImage: {
-    width: '100%',
-    height: 200,
-    resizeMode: 'cover',
-    borderRadius: 8,
-    marginBottom: 8,
-  },
-  title: {
-    textAlign: 'center',
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: 'white',
   },
 });
 

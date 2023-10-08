@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, PanResponder, Modal, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, PanResponder, Modal, TouchableOpacity, Dimensions, Image, ImageBackground } from 'react-native';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
-const bucketHeight = 50;
-const bucketWidth = 50;
+const bucketHeight = 200;
+const bucketWidth = 200;
 
 const GameScreen = () => {
   const [score, setScore] = useState(0);
@@ -12,6 +12,7 @@ const GameScreen = () => {
   const [fallingObjects, setFallingObjects] = useState([]);
   const [bucketPosition, setBucketPosition] = useState(150);
   const [gameOver, setGameOver] = useState(false);
+  const [objectKey, setObjectKey] = useState(0);
 
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
@@ -27,11 +28,32 @@ const GameScreen = () => {
     obj1.positionY < obj2.positionY + obj2.height
   );
 
+  const bucketImage = require('../../../assets/fishingnet.png'); 
+  const backgroundImage = require('../../../assets/gamebackground.png');
+
+  const images = [
+    require('../../../assets/thrash1.png'), 
+    require('../../../assets/thrash2.png'),
+    require('../../../assets/thrash3.png'),
+    require('../../../assets/thrash4.png'),
+  ];
+
+  const selectRandomImage = () => {
+    const randomIndex = Math.floor(Math.random() * images.length);
+    return images[randomIndex];
+  };
+
   useEffect(() => {
     const objectCreator = setInterval(() => {
-      const newObj = { positionX: Math.floor(Math.random() * windowWidth), positionY: 0, width: 30, height: 30 };
-      setFallingObjects((prevObjects) => [...prevObjects, newObj]);
-    }, 1000);
+        const newObj = { 
+          positionX: Math.floor(Math.random() * windowWidth), 
+          positionY: 0, 
+          width: 100, 
+          height: 100, 
+          imageSrc: selectRandomImage(),
+        };
+        setFallingObjects((prevObjects) => [...prevObjects, newObj]);
+      }, 1000);
 
     return () => clearInterval(objectCreator);
   }, []);
@@ -54,6 +76,7 @@ const GameScreen = () => {
       const filteredFallingObjects = newFallingObjects.filter((obj) => {
         if (obj.positionY + obj.height >= windowHeight) {
           setFallenItems((prev) => prev + 1);
+          setObjectKey((prevKey) => prevKey + 1); 
           return false;
         }
 
@@ -73,57 +96,71 @@ const GameScreen = () => {
   }, [bucketPosition, fallingObjects]);
 
   useEffect(() => {
-    if (score >= 100 || fallenItems >= 5) {
+    if (score >= 100 || fallenItems >= 10) {
       setGameOver(true);
     }
   }, [score, fallenItems]);
 
   const resetGame = () => {
-    setScore(0);
+    setScore(0); 
     setFallenItems(0);
     setFallingObjects([]);
     setGameOver(false);
   };
 
   return (
-    <View style={styles.container} {...panResponder.panHandlers}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={gameOver}
-        onRequestClose={() => {
-          alert('Modal has been closed.');
-        }}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Game Over</Text>
-            <Text style={styles.modalScore}>Score: {score}</Text>
-            <TouchableOpacity style={styles.retryButton} onPress={resetGame}>
-              <Text style={styles.textStyle}>Retry</Text>
-            </TouchableOpacity>
-          </View>
+    <ImageBackground source={backgroundImage} style={styles.container}>
+        <View style={styles.container} {...panResponder.panHandlers}>
+        <Modal
+            animationType="slide"
+            transparent={true}
+            visible={gameOver}
+            onRequestClose={() => {
+            alert('Modal has been closed.');
+            }}>
+            <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+                <Text style={styles.modalText}>Game Over</Text>
+                <Text style={styles.modalScore}>Score: {score}</Text>
+                <TouchableOpacity style={styles.retryButton} onPress={resetGame}>
+                <Text style={styles.textStyle}>Retry</Text>
+                </TouchableOpacity>
+            </View>
+            </View>
+        </Modal>
+            
+        <Text style={styles.score}>Score: {score}</Text>
+        {fallingObjects.map((object, index) => (
+            <Image
+            key={index + objectKey}
+            source={object.imageSrc}
+            style={[
+                styles.fallingObject,
+                { top: object.positionY, left: object.positionX },
+            ]}
+            resizeMode="cover"
+            />
+        ))}
+        <Image 
+            source={bucketImage}
+            style={[styles.bucket, { left: bucketPosition }]}
+            resizeMode="contain"
+            />
         </View>
-      </Modal>
 
-      <Text style={styles.score}>Score: {score}</Text>
-      {fallingObjects.map((object, index) => (
-        <View
-          key={index}
-          style={[
-            styles.fallingObject,
-            { top: object.positionY, left: object.positionX },
-          ]}
-        />
-      ))}
-      <View style={[styles.bucket, { left: bucketPosition }]} />
-    </View>
+    </ImageBackground>
   );
 };
    
 const styles = StyleSheet.create({
-  container: {
+    container: {
     flex: 1,
-    backgroundColor: '#DEF',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+    gameView: {
+    flex: 1,
+    width: '100%',
     alignItems: 'center',
     justifyContent: 'space-between'
   },
@@ -131,22 +168,18 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     margin: 20,
-    color: '#009688'
+    color: '#FFFFFF'
   },
   bucket: {
     width: bucketWidth,
     height: bucketHeight,
     position: 'absolute',
     bottom: 50,
-    backgroundColor: '#4CAF50',
-    borderRadius: 25
   },
   fallingObject: {
-    width: 20,
-    height: 20,
-    backgroundColor: 'red',
+    width: 50,
+    height: 50,
     position: 'absolute',
-    borderRadius: 10,
   },
   // Styles para el modal:
   centeredView: {

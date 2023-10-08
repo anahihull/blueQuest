@@ -1,45 +1,124 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Button, StyleSheet } from 'react-native';
+import { RadioButton } from 'react-native-paper';
+import Modal from 'react-native-modal';
 
-const HomeScreen = ({ navigation }) => {
-  const navigateToAquaticGame = () => {
-    navigation.navigate('AquaticFoodChainGame');
+const Questions = [
+  {
+    "Answers": [
+      "Through their skin",
+      "By drinking water",
+      "Using gills"
+    ],
+    "Correct Answer": "Using gills",
+    "ID": "'1'",
+    "Question": "What is the main way fish breathe underwater?"
+  },
+  {
+    "Answers": [
+      "Dolphins",
+      "Turtles",
+      "Eels"
+    ],
+    "Correct Answer": "Eels",
+    "ID": "'2'",
+    "Question": "Which of these animals lives in both saltwater and freshwater environments?"
+  },
+  {
+    "Answers": [
+      "Seaweeds",
+      "Plankton",
+      "Coral reefs"
+    ],
+    "Correct Answer": "Plankton",
+    "ID": "'3'",
+    "Question": "What is the term for tiny floating organisms in the ocean that form the base of the marine food chain?"
+  },
+  {
+    "Answers": [
+      "Swimming",
+      "Photosynthesis",
+      "Digestion"
+    ],
+    "Correct Answer": "Photosynthesis",
+    "ID": "'4'",
+    "Question": "What process do aquatic plants use to make their own food using sunlight?"
+  },
+  {
+    "Answers": [
+      "Seashells",
+      "Plastic bags",
+      "Algae blooms"
+    ],
+    "Correct Answer": "Algae blooms",
+    "ID": "'5'",
+    "Question": "What poses a danger to aquatic ecosystems by blocking sunlight and reducing oxygen levels in the water?"
+  }
+];
+
+const getRandomQuestion = () => {
+  const randomNum = Math.floor(Math.random() * Questions.length);
+  return Questions[randomNum];
+};
+
+const LearnScreen = () => {
+  const [question, setQuestion] = useState(getRandomQuestion());
+  const [selectedAnswer, setSelectedAnswer] = useState('');
+  const [showResult, setShowResult] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const handleAnswerChange = (answer) => {
+    setSelectedAnswer(answer);
+    setShowResult(false);
   };
 
   const navigateToWaterConservationGame = () => {
     navigation.navigate('WaterConservationGame');
   };
 
-  const navigateToMarineAnimalList = () => {
-    navigation.navigate('MarineAnimalList');
-  }
-
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.titleText}>Home</Text>
-      </View>
-      <View style={styles.subtitleContainer}>
-        <Text style={styles.subtitleText}>Minigames:</Text>
-      </View>
-      <TouchableOpacity style={styles.button} onPress={navigateToAquaticGame}>
-        <Text style={styles.buttonText}>Start Aquatic Game</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={navigateToWaterConservationGame}>
-        <Text style={styles.buttonText}>Start Water Conservation Game</Text>
-      </TouchableOpacity>
-      <View style={styles.remindersContainer}>
-        <Text style={styles.remindersTitle}>Reminders & Announcements:</Text>
-        <Text style={styles.remindersText}>
-        Every time we lather on sunblock, we're protecting our skin from harmful UV rays, but let's not forget about the hidden impact on our delicate underwater ecosystems. Many sunscreens contain zinc oxide, which, while effective at safeguarding our skin, can be detrimental to coral reefs. As we frolic in crystal-clear waters, tiny particles of zinc wash off our bodies and end up in the ocean, where they can disrupt coral's natural defenses, contribute to coral bleaching, and harm marine life. The next time you enjoy the sun and sea, consider using reef-friendly sunblock formulations that protect you and our precious coral reefs, ensuring that future generations can continue to marvel at their beauty beneath the waves.
+      <Text style={styles.title}>Trivia Time!</Text>
+      <Text style={styles.question}>{question.Question}</Text>
+
+      {question.Answers.map((answer, index) => (
+        <View key={index} style={styles.optionContainer}>
+          <RadioButton
+            value={answer}
+            status={selectedAnswer === answer ? 'checked' : 'unchecked'}
+            onPress={() => handleAnswerChange(answer)}
+            disabled={showResult}
+          />
+          <Text style={styles.optionText}>{answer}</Text>
+        </View>
+      ))}
+
+      <Button
+        title="Verify Answer"
+        onPress={checkAnswer}
+        disabled={!selectedAnswer || showResult}
+      />
+
+      {showResult && (
+        <Text style={isCorrectAnswer() ? styles.correctText : styles.incorrectText}>
+          {isCorrectAnswer() ? '¡Correct answer!' : 'Incorrect answer. Try again.'}
         </Text>
-      </View>
-      <View style={styles.subtitleContainer}>
-        <Text style={styles.subtitleText}>Animals:</Text>
-      </View>
-      <TouchableOpacity style={styles.button} onPress={navigateToMarineAnimalList}>
-        <Text style={styles.buttonText}>See marine data</Text>
-      </TouchableOpacity>
+      )}
+
+      {showResult && !isCorrectAnswer() && (
+        <Button
+          title="Try again"
+          onPress={handleNextQuestion}
+        />
+      )}
+
+      <Modal isVisible={isModalVisible}>
+        <View style={styles.modalContainer}>
+          <Text style={styles.modalText}>Congratulations!</Text>
+          <Text style={styles.modalText}>You unlocked a new lesson.</Text>
+          <Button title="Close" onPress={() => setModalVisible(false)} />
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -47,55 +126,47 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
-    padding: 20,
-  },
-  header: {
+    justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
+    paddingHorizontal: 16,
   },
-  titleText: {
+  title: {
     fontSize: 24,
-    fontWeight: 'bold',
-  },
-  subtitleContainer: {
-    marginTop: 10,
     marginBottom: 20,
   },
-  subtitleText: {
+  question: {
     fontSize: 18,
-    fontWeight: 'bold',
+    marginBottom: 20,
   },
-  button: {
-    backgroundColor: '#3498db',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginBottom: 15,
-  },
-  buttonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  remindersContainer: {
-    marginTop: 20,
-    borderTopWidth: 1,
-    borderColor: '#ddd',
-    padding: 10,
-    backgroundColor: '#fff', // Added background color
-    borderRadius: 10, // Added border radius
-    borderWidth: 2, // Added border width
-    borderColor: '#3498db', // Added border color
-  },
-  remindersTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
+  optionContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 10,
   },
-  remindersText: {
+  optionText: {
+    flex: 1,
     fontSize: 16,
+  },
+  correctText: {
+    color: 'green',
+    fontSize: 16,
+    marginTop: 10,
+  },
+  incorrectText: {
+    color: 'red',
+    fontSize: 16,
+    marginTop: 10,
+  },
+  modalContainer: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalText: {
+    fontSize: 18,
+    marginBottom: 10,
   },
 });
 
-export default HomeScreen;
+export default LearnScreen;
