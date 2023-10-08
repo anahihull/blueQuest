@@ -30,7 +30,7 @@ export default function App() {
         <Stack.Screen 
           name="AuthPage" 
           component={AuthPage} 
-          options={{ headerShown: false }} // Add this line to hide the header
+          options={{ headerShown: false }} 
         />
          <Stack.Screen
         name="Main"
