@@ -8,6 +8,8 @@ import LearnScreen from './src/screens/LearnScreen';
 import ClubScreen from './src/screens/ClubScreen';
 import MapScreen from './src/screens/MapScreen';
 import BottomNavbar from './src/components/BottomNavbar';
+import AquaticFoodChainGame from './src/screens/AquaticFoodChainGame'; // Import your game component
+import WaterConservationGame from './src/screens/WaterConservationGame'; // Import your game component
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -15,10 +17,10 @@ const Stack = createStackNavigator();
 function TabNavigator() {
   return (
     <Tab.Navigator tabBar={(props) => <BottomNavbar {...props} />}>
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Learn" component={LearnScreen} />
-      <Tab.Screen name="Club" component={ClubScreen} />
-      <Tab.Screen name="Map" component={MapScreen} />
+      <Tab.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+      <Tab.Screen name="Learn" component={LearnScreen} options={{ headerShown: false }} />
+      <Tab.Screen name="Club" component={ClubScreen} options={{ headerShown: false }} />
+      <Tab.Screen name="Map" component={MapScreen} options={{ headerShown: false }} />
     </Tab.Navigator>
   );
 }
@@ -27,16 +29,11 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="AuthPage">
-        <Stack.Screen 
-          name="AuthPage" 
-          component={AuthPage} 
-          options={{ headerShown: false }} 
-        />
-         <Stack.Screen
-        name="Main"
-        component={TabNavigator}
-        options={{headerShown: false}}
-        />
+        <Stack.Screen name="AuthPage" component={AuthPage} options={{ headerShown: false }} />
+        <Stack.Screen name="Main" component={TabNavigator} options={{ headerShown: false }} />
+        {/* Add a screen for your game */}
+        <Stack.Screen name="AquaticFoodChainGame" component={AquaticFoodChainGame} options={{ headerShown: false }} />
+        <Stack.Screen name="WaterConservationGame" component={WaterConservationGame} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
