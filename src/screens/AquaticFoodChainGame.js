@@ -1,73 +1,102 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, Animated } from 'react-native';
+import { View, Text, Button, StyleSheet, Animated, Image } from 'react-native';
 
 const AquaticFoodChainGame = () => {
   const [score, setScore] = useState(0);
-  const [fishAnimation] = useState(new Animated.Value(0));
-  const [planktonAnimation] = useState(new Animated.Value(0));
+  const [timer, setTimer] = useState(30);
+  const [creatures, setCreatures] = useState([]);
+  const [gameOver, setGameOver] = useState(false);
 
-  const handleEat = (points) => {
-    setScore(score + points);
-    animateFishAndPlankton();
+  useEffect(() => {
+    // Start the game loop
+    const gameLoop = setInterval(() => {
+      // Update the timer
+      setTimer((prevTimer) => prevTimer - 1);
+
+      // Randomly spawn fish or plankton
+      if (!gameOver && Math.random() < 0.5) {
+        const newCreature = {
+          type: Math.random() < 0.5 ? 'fish' : 'plankton',
+          id: Date.now(),
+        };
+        setCreatures((prevCreatures) => [...prevCreatures, newCreature]);
+      }
+
+      // Check for game over
+      if (timer === 0) {
+        clearInterval(gameLoop);
+        setGameOver(true);
+      }
+    }, 1000);
+
+    // Clean up the interval when the component unmounts
+    return () => clearInterval(gameLoop);
+  }, [timer, gameOver]);
+
+  const handleEat = (creatureId, points) => {
+    setScore((prevScore) => prevScore + points);
+
+    // Remove the eaten creature from the list
+    setCreatures((prevCreatures) => prevCreatures.filter((c) => c.id !== creatureId));
   };
 
   const restartGame = () => {
     setScore(0);
-    fishAnimation.setValue(0);
-    planktonAnimation.setValue(0);
-  };
-
-  const animateFishAndPlankton = () => {
-    // Animate the fish and plankton for a more interactive experience
-    Animated.sequence([
-      Animated.timing(fishAnimation, {
-        toValue: 1,
-        duration: 500,
-        useNativeDriver: false,
-      }),
-      Animated.timing(planktonAnimation, {
-        toValue: 1,
-        duration: 500,
-        useNativeDriver: false,
-      }),
-      Animated.timing(fishAnimation, {
-        toValue: 0,
-        duration: 0,
-        useNativeDriver: false,
-      }),
-      Animated.timing(planktonAnimation, {
-        toValue: 0,
-        duration: 0,
-        useNativeDriver: false,
-      }),
-    ]).start();
+    setTimer(30);
+    setCreatures([]);
+    setGameOver(false);
   };
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text style={{ fontSize: 24, marginBottom: 20 }}>Aquatic Food Chain Game</Text>
       <Text style={{ fontSize: 18 }}>Your Score: {score}</Text>
-      <Animated.Image
-        source={require('../../assets/fish.png')} // Update the path to your fish image
-        style={[styles.animatedImage, { transform: [{ scale: fishAnimation }] }]}
-      />
-      <Animated.Image
-        source={require('../../assets/food.png')} // Update the path to your plankton image
-        style={[styles.animatedImage, { transform: [{ scale: planktonAnimation }] }]}
-      />
-      <Button title="Eat Fish" onPress={() => handleEat(10)} />
-      <Button title="Eat Plankton" onPress={() => handleEat(5)} />
-      <Button title="Restart Game" onPress={restartGame} />
+      <Text style={{ fontSize: 18 }}>Time Left: {timer} seconds</Text>
+      <View style={styles.gameContainer}>
+        {creatures.map((creature) => (
+          <View key={creature.id} style={styles.creatureContainer}>
+            <Text style={{ fontSize: 16 }}>{creature.type === 'fish' ? 'Fish' : 'Plankton'}</Text>
+            <Image
+              source={
+                creature.type === 'fish'
+                  ? require('../../assets/fish.png')
+                  : require('../../assets/food.png')
+              }
+              style={styles.creatureImage}
+            />
+            <Button
+              title={`Eat ${creature.type}`}
+              onPress={() => handleEat(creature.id, creature.type === 'fish' ? 10 : 5)}
+            />
+          </View>
+        ))}
+      </View>
+      {gameOver && (
+        <View>
+          <Text style={{ fontSize: 20, marginTop: 20 }}>Game Over!</Text>
+          <Button title="Restart Game" onPress={restartGame} />
+        </View>
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  animatedImage: {
+  gameContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  creatureContainer: {
+    alignItems: 'center',
+    margin: 10,
+  },
+  creatureImage: {
     width: 100,
     height: 100,
     resizeMode: 'contain',
-    marginBottom: 10,
   },
 });
 
