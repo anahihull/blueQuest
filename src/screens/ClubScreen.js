@@ -59,22 +59,22 @@ const ClubScreen = () => {
 
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
+  
     if (permissionResult.granted === false) {
       alert('Permission to access media library is required!');
       return;
     }
-
+  
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
     });
-
+  
     if (!result.cancelled) {
-      setImageURI(result.uri);
+      setImageURI(result.assets[0].uri); // Updated key to result.assets[0].uri
     }
-  };
+  };  
 
   const handleEditPost = () => {
     if (selectedPost && name.trim() !== '' && content.trim() !== '') {
@@ -157,7 +157,9 @@ const ClubScreen = () => {
                 setName(post.name);
                 setContent(post.content);
                 setImageURI(post.imageURL);
-                nameInputRef.current.focus();
+                if (nameInputRef.current) {
+                  nameInputRef.current.focus();
+                }
               }}
             >
               <Card style={styles.post}>
@@ -200,8 +202,8 @@ const ClubScreen = () => {
             )}
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={handleEditPost}>Edit</Button>
-            <Button onPress={handleDeletePost}>Delete</Button>
+            <Button title="Edit" onPress={handleEditPost}>Edit</Button>
+            <Button title="Delete" onPress={handleDeletePost}>Delete</Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>
