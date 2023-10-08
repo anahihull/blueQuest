@@ -3,39 +3,41 @@ import { Text, View, StyleSheet} from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import {useState, useEffect} from 'react';
 import * as Location from 'expo-location';
-import { Portal, Dialog, Paragraph, Button, PaperProvider, DefaultTheme, ActivityIndicator } from 'react-native-paper';
-
-
-const MyDialog = ({ visible, message, hideDialog }) => {
-  return (
-    <Portal>
-      <Dialog visible={visible} onDismiss={hideDialog}>
-        <Dialog.Title>Alert</Dialog.Title>
-        <Dialog.Content>
-          <Paragraph>{message}</Paragraph>
-        </Dialog.Content>
-        <Dialog.Actions>
-          <Button onPress={hideDialog}>Close</Button>
-        </Dialog.Actions>
-      </Dialog>
-    </Portal>
-  );
-};
+import { ActivityIndicator, ThemeProvider } from 'react-native-paper';
+import { NativeBaseProvider, Box, extendTheme, Button, Card, Modal, VStack} from "native-base";
 
 const GpsView = () => {
+
+    const theme = extendTheme({
+        colors: {
+          // Add new color
+            primary: {    
+            50: "#000080",
+            100: "#f5fffa",
+            200: "#000000",
+            300: "#7AC1E4",
+            400: "#47A9DA",
+            500: "#0088CC",
+            600: "#007AB8",
+            700: "#006BA1",
+            800: "#005885",
+            900: "#003F5E"
+          },
+          // Redefining only one shade, rest of the color will remain same.
+          amber: {
+            400: "#d97706"
+          }
+        },
+        config: {
+          // Changing initialColorMode to 'dark'
+          initialColorMode: "dark"
+        }
+      });
+
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  const [dialogVisible, setDialogVisible] = useState(false);
+  const [showCard, setShowCard] = useState(false);
   const [message, setMessage] = useState('');
-
-  const showDialog = (message) => {
-    setMessage(message);
-    setDialogVisible(true);
-  };
-
-  const hideDialog = () => {
-    setDialogVisible(false);
-  };
 
   useEffect(() => {
     (async () => {
@@ -64,47 +66,56 @@ const GpsView = () => {
     coordx = null;
     coordy = null;
   }
-  console.log(coordx);
+
+  const openCard = () => {
+    setShowCard(true);
+  };
+
+  const closeCard = () => {
+    setShowCard(false);
+  };
 
   if (coordx !== null && coordy !== null && coordx !== "undefined") {
-    console.log("renderizando");
     return (
-      <PaperProvider style={styles.container}>
-        <MapView
-          style={styles.map}
-          initialRegion={{
-            latitude: coordx,
-            longitude: coordy,
-            latitudeDelta: 2.0000,
-            longitudeDelta: 2.0000,
-          }}
-          followsUserLocation={true}
-        >
-          <Marker
-            coordinate={{ latitude: coordx, longitude: coordy }}
-            title="My location"
-            description="This is where you live"
-          />
-        </MapView>
-        <View style={styles.buttonContainer}>
-          <Button
-            mode="contained"
-            icon="alert"
-            onPress={() => showDialog('Sending location to primary contacts.')}
-            style={styles.helpButton}
-          >
-            What is up with my water?
-          </Button>
-          <MyDialog visible={dialogVisible} message={message} hideDialog={hideDialog} />
-        </View>
-      </PaperProvider>
+        <NativeBaseProvider theme={theme}>
+                <MapView
+                style={styles.map}
+                initialRegion={{
+                    latitude: coordx,
+                    longitude: coordy,
+                    latitudeDelta: 2.0000,
+                    longitudeDelta: 2.0000,
+                }}
+                followsUserLocation={true}
+                >
+                <Marker
+                    coordinate={{ latitude: coordx, longitude: coordy }}
+                    title="My location"
+                    description="This is where you live"
+                />
+                </MapView>
+
+                <Button bg="primary.50" onPress={openCard}>What's up with my water?</Button>
+
+                <Modal isOpen={showCard} onClose={closeCard}>
+                    <VStack p={4} space={2} bg="primary.100" style={{ borderRadius: 10, width: 200, height: 200}}>
+                        
+                        <Text>My water</Text>
+                        <Text>Info</Text>
+                        <Button bg="primary.200" onPress={closeCard}>Close</Button>
+                    </VStack>
+                </Modal>
+            
+        </NativeBaseProvider>
     );
   } else {
     return (
-      <View style={styles.loadingContainer}>
+    <NativeBaseProvider>
+      <Box style={styles.loadingContainer}>
         <ActivityIndicator animating={true} color='black'/>
         <Text style={styles.loadingText}>Loading...</Text>
-      </View>
+      </Box>   
+    </NativeBaseProvider>
     );
   }
 };
@@ -132,7 +143,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center', // Centra horizontalmente el botón
   },
   helpButton: {
-    width: '100%',
+    justifyContent: 'center',
+    width: '100px',
+    height: 'auto',
     backgroundColor: "#590D8C"
   },
 });
