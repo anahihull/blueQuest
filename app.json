@@ -1,4 +1,18 @@
 {
+  "permissions": [
+    "CAMERA",
+    "AUDIO_RECORDING",
+    "MEDIA_LIBRARY",
+    "CAMERA_ROLL",
+    "LOCATION",
+    "NOTIFICATIONS",
+    "BLUETOOTH",
+    "BLUETOOTH_PERIPHERAL",
+    "CONTACTS",
+    "MICROPHONE",
+    "SENSORS"
+  ],
+  
   "expo": {
     "name": "blue-quest",
     "slug": "blue-quest",

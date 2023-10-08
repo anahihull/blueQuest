@@ -8,6 +8,7 @@ import LearnScreen from './src/screens/LearnScreen';
 import ClubScreen from './src/screens/ClubScreen';
 import MapScreen from './src/screens/MapScreen';
 import BottomNavbar from './src/components/BottomNavbar';
+import AquaticFoodChainGame from './src/screens/AquaticFoodChainGame'; // Import your game component
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -29,6 +30,8 @@ export default function App() {
       <Stack.Navigator initialRouteName="AuthPage">
         <Stack.Screen name="AuthPage" component={AuthPage} options={{ headerShown: false }} />
         <Stack.Screen name="Main" component={TabNavigator} options={{ headerShown: false }} />
+        {/* Add a screen for your game */}
+        <Stack.Screen name="AquaticFoodChainGame" component={AquaticFoodChainGame} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

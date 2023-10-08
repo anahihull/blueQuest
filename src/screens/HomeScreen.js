@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Button } from 'react-native';
 
 const HomeScreen = ({ navigation }) => {
   useEffect(() => {
@@ -8,9 +8,14 @@ const HomeScreen = ({ navigation }) => {
     });
   }, []);
 
+  const navigateToAquaticGame = () => {
+    navigation.navigate('AquaticFoodChainGame'); // Navigate to the 'AquaticFoodChainGame' screen
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>¡Bienvenido a mi aplicación React Native!</Text>
+      <Button title="Start Aquatic Game" onPress={navigateToAquaticGame} />
     </View>
   );
 };
