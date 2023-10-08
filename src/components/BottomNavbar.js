@@ -1,6 +1,10 @@
 import React from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import Icon2 from 'react-native-vector-icons/Entypo';
+import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
+
+
 
 const BottomNavbar = ({ navigation }) => {
   const navigateToScreen = (screenName) => {
@@ -13,25 +17,25 @@ const BottomNavbar = ({ navigation }) => {
         style={styles.tab}
         onPress={() => navigateToScreen('Home')}
       >
-        <Icon name="heart" size={30} color="red" />
+        <Icon2 name="home" size={30} color="red" />
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.tab}
         onPress={() => navigateToScreen('Learn')}
       >
-        <Icon name="heart" size={30} color="red" />
+        <Icon name="book" size={30} color="red" />
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.tab}
         onPress={() => navigateToScreen('Club')}
       >
-        <Icon name="heart" size={30} color="red" />
+        <Icon name="user-friends" size={30} color="red" />
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.tab}
         onPress={() => navigateToScreen('Map')}
       >
-        <Icon name="heart" size={30} color="red" />
+        <Icon3 name="jellyfish" size={30} color="red" />
       </TouchableOpacity>
     </View>
   );
