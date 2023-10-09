@@ -14,6 +14,9 @@ const AuthPage = () => {
   const navigation = useNavigation();
 
   const authenticateUser = async () => {
+    let loginJson; 
+    let registerJson; 
+
     if (!username || !password) {
       console.log("no user or password")
     }
