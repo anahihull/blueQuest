@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import {Card} from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 
@@ -17,13 +17,9 @@ const HomeScreen = ({ navigation }) => {
       <Card>
         <Card.Title>{title}</Card.Title>
         <Card.Divider/>
-        {/* <Card.Image source={...}> */}
-          {/* Coloca alguna imagen si es necesario */}
-        {/* </Card.Image> */}
         <Text style={{ marginBottom: 10 }}>
           {content}
         </Text>
-        {/* Puedes añadir botones u otros elementos aquí */}
       </Card>
     );
   };
@@ -77,10 +73,14 @@ const HomeScreen = ({ navigation }) => {
         <Text style={styles.subtitleText}>Minigames:</Text>
       </View>
       <TouchableOpacity style={styles.button} onPress={navigateToAquaticGame}>
-        <Text style={styles.buttonText}>Start Aquatic Game</Text>
+        <Image
+        source={require('../../assets/cleanocean.png')} style={{width: 150, height: 150}} />
+        <Text style={styles.buttonText}>Clean the ocean!</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={navigateToWaterConservationGame}>
-        <Text style={styles.buttonText}>Start Water Conservation Game</Text>
+        <Image
+        source={require('../../assets/closefaucet.png')} style={{width: 150, height: 150}} />
+        <Text style={styles.buttonText}>Close the faucet!</Text>
       </TouchableOpacity>
       <View style={styles.remindersContainer}>
         <CardList data={data}/>
@@ -95,23 +95,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f0f0f0',
+    alignItems: 'center',
     padding: 20,
   },
   header: {
     alignItems: 'center',
     marginBottom: 20,
   },
-  titleText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
   subtitleContainer: {
     marginTop: 10,
     marginBottom: 20,
   },
   subtitleText: {
-    fontSize: 18,
+    fontSize: 50,
     fontWeight: 'bold',
+    color: "#f08080"
   },
   button: {
     backgroundColor: '#3498db',
@@ -119,6 +117,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 5,
     marginBottom: 15,
+    alignItems: 'center'
   },
   buttonText: {
     fontSize: 18,
