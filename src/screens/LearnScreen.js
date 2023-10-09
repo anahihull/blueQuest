@@ -5,11 +5,11 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 const HomeScreen = ({ navigation }) => {
   const navigateToAquaticGame = () => {
-    navigation.navigate('AquaticFoodChainGame');
+    navigation.navigate('CleanOcean');
   };
 
   const navigateToWaterConservationGame = () => {
-    navigation.navigate('WaterConservationGame');
+    navigation.navigate('Faucet');
   };
 
   const MyCard = ({title, content}) => {
