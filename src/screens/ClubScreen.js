@@ -55,26 +55,26 @@ const ClubScreen = () => {
 
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-  
+
     if (permissionResult.granted === false) {
       alert('Permission to access media library is required!');
       return;
     }
-  
+
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
     });
-  
-    if (!result.cancelled) {
+
+    if (!result.canceled) {
       // Use the 'assets' array to get selected assets
       setImageAssets([result.assets[0]]);
       console.log('Image Assets:', result.assets); // Add this line for debugging
     } else if (result.errorCode) {
       console.error('Image picking error:', result.errorCode);
     }
-  };      
+  };
 
   const handleEditPost = () => {
     if (selectedPost && name.trim() !== '' && content.trim() !== '') {
@@ -154,7 +154,12 @@ const ClubScreen = () => {
             style={[styles.input, styles.contentInput]}
             multiline
           />
-          <Button title="Pick an Image" onPress={pickImage} />
+          <TouchableOpacity
+            onPress={pickImage}
+            style={styles.roundButton} // Apply the round button style here
+          >
+            <Text style={styles.roundButtonText}>Pick an Image</Text>
+          </TouchableOpacity>
           {imageAssets.length > 0 && (
             <Image
               source={{ uri: imageAssets[0].uri }}
@@ -162,8 +167,19 @@ const ClubScreen = () => {
             />
           )}
           <View style={styles.buttonContainer}>
-            <Button title="Cancel" onPress={toggleAddPost} style={styles.cancelButton} />
-            <Button title="Add Post" onPress={addPost} />
+          <TouchableOpacity
+              onPress={addPost}
+              style={styles.roundButton} // Apply the round button style here
+            >
+              <Text style={styles.roundButtonText}>Add Post</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={toggleAddPost}
+              style={styles.roundButton} // Apply the round button style here
+            >
+              <Text style={styles.roundButtonText}>Cancel</Text>
+            </TouchableOpacity>
+            
           </View>
         </View>
       )}
@@ -195,7 +211,12 @@ const ClubScreen = () => {
               style={[styles.input, styles.contentInput]}
               multiline
             />
-            <Button title="Pick an Image" onPress={pickImage} />
+            <TouchableOpacity
+              onPress={pickImage}
+              style={styles.roundButton} // Apply the round button style here
+            >
+              <Text style={styles.roundButtonText}>Pick an Image</Text>
+            </TouchableOpacity>
             {imageAssets.length > 0 && (
               <Image
                 source={{ uri: imageAssets[0].uri }}
@@ -204,8 +225,19 @@ const ClubScreen = () => {
             )}
           </Dialog.Content>
           <Dialog.Actions>
-            <Button title="Delete" onPress={handleDeletePost}>Delete</Button>
-            <Button title="Done" onPress={handleEditPost}>Done</Button>
+          
+            <TouchableOpacity
+              onPress={handleDeletePost}
+              style={styles.roundButton} // Apply the round button style here
+            >
+              <Text style={styles.roundButtonText}>Delete</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleEditPost}
+              style={styles.roundButton} // Apply the round button style here
+            >
+              <Text style={styles.roundButtonText}>Done</Text>
+            </TouchableOpacity>
           </Dialog.Actions>
         </Dialog>
       </Portal>
@@ -231,10 +263,17 @@ const styles = StyleSheet.create({
   contentInput: {
     height: 100,
   },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  roundButton: {
+    backgroundColor: 'lightblue',
+    padding: 10,
+    borderRadius: 20, // Adjust the value to make it more or less round
     alignItems: 'center',
+    marginTop: 8,
+    elevation: 3, // Add some elevation for a shadow effect
+  },
+  roundButtonText: {
+    color: 'white',
+    fontSize: 16,
   },
   cancelButton: {
     marginRight: 8,
@@ -252,7 +291,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: 'green',
+    backgroundColor: 'lightblue',
     alignItems: 'center',
     justifyContent: 'center',
   },
