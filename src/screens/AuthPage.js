@@ -2,34 +2,64 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
+const ipAddress = "https://mjrdbqqw-5000.usw3.devtunnels.ms/";
+
+
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const navigation = useNavigation(); 
+  const navigation = useNavigation();
 
-  const authenticateUser = () => {
+  const authenticateUser = async () => {
     if (!username || !password) {
-      Alert.alert('Error', 'Username and password cannot be empty');
-      return;
+      console.log("no user or password")
     }
+    const userData = {
+        username: username,
+        password: password,
+    };
 
-    // Example: Simple client-side authentication logic
     if (isLogin) {
-      // Insert login logic here, e.g., API call to your server to validate credentials
-      if (username === 'user' && password === 'pass') {
-        Alert.alert('Success', 'Logged in successfully');
-        setIsSuccess(true);
-        navigation.navigate('Main')
-      } else {
-        Alert.alert('Error', 'Invalid username or password');
+      try{
+        const data = await fetch(ipAddress+"login", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(userData),
+        });
+        loginJson = await data.json();
+      }catch(err){
+        console.log("error"  + err);
+      }
+      if (loginJson["message"] == "user found") {
+        navigation.navigate("Main", { screen: "Home" });
+      } else if (loginJson["message"] == "user not found") {
+        Alert.alert('Failed', 'User not found');
+      } else if (loginJson["message"] == "incorrect password") {
+        Alert.alert('Failed', 'Incorrect password');
       }
     } else {
-      // Insert register logic here, e.g., API call to your server to create a new user account
-      Alert.alert('Success', 'Account created successfully');
-      setIsLogin(true);
+      try{
+        const data = await fetch(ipAddress+"register", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(userData),
+        });
+        registerJson = await data.json();
+        console.log(registerJson);
+      }catch(err){
+        console.log("error"  + err);
+      }
+      if (registerJson["message"] == "user registered") {
+        Alert.alert('Success', 'Account created successfully');
+        navigation.navigate("Main", { screen: "Home" });
+      }
     }
   };
 

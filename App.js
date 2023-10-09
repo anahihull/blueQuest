@@ -28,7 +28,7 @@ function TabNavigator() {
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Main">
+      <Stack.Navigator initialRouteName="AuthPage">
         <Stack.Screen name="AuthPage" component={AuthPage} options={{ headerShown: false }} />
         <Stack.Screen name="Main" component={TabNavigator} options={{ headerShown: false }} />
         <Stack.Screen name="CleanOcean" component={GameScreen} options={{ headerShown: true }} />
