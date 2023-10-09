@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import {Card} from 'react-native-elements';
+import { Card } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 
 const HomeScreen = ({ navigation }) => {
@@ -12,21 +12,18 @@ const HomeScreen = ({ navigation }) => {
     navigation.navigate('Faucet');
   };
 
-  const MyCard = ({title, content}) => {
-    return(
+  const MyCard = ({ title, content }) => {
+    return (
       <Card>
         <Card.Title>{title}</Card.Title>
-        <Card.Divider/>
-        {/* <Card.Image source={...}> */}
-          {/* Coloca alguna imagen si es necesario */}
-        {/* </Card.Image> */}
+        <Card.Divider />
         <Text style={{ marginBottom: 10 }}>
           {content}
         </Text>
-        {/* Puedes añadir botones u otros elementos aquí */}
       </Card>
     );
   };
+
   const data = [
     {
       title: 'Lesson 1: Seas of Plastic',
@@ -54,40 +51,37 @@ const HomeScreen = ({ navigation }) => {
     }
   ];
 
-  const CardList = ({data}) => {
-    return(
-      <View style={{backgroundColor: 'transparent'}}>
+  const CardList = ({ data }) => {
+    return (
+      <View style={{ backgroundColor: 'transparent' }}>
         {data.map((item, index) => (
           <MyCard
-          key={index}
-          title={item.title}
-          content={item.content}
+            key={index}
+            title={item.title}
+            content={item.content}
           />
         ))}
       </View>
-
     );
   };
 
-
   return (
-  <ScrollView>
-    <View style={styles.container}>
-      <View style={styles.subtitleContainer}>
-        <Text style={styles.subtitleText}>Minigames:</Text>
+    <ScrollView>
+      <View style={styles.container}>
+        <View style={styles.subtitleContainer}>
+          <Text style={styles.subtitleText}>Minigames:</Text>
+        </View>
+        <TouchableOpacity style={styles.roundButton} onPress={navigateToAquaticGame}>
+          <Text style={styles.buttonText}>Start Aquatic Game</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.roundButton} onPress={navigateToWaterConservationGame}>
+          <Text style={styles.buttonText}>Start Water Conservation Game</Text>
+        </TouchableOpacity>
+        <View style={styles.remindersContainer}>
+          <CardList data={data} />
+        </View>
       </View>
-      <TouchableOpacity style={styles.button} onPress={navigateToAquaticGame}>
-        <Text style={styles.buttonText}>Start Aquatic Game</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={navigateToWaterConservationGame}>
-        <Text style={styles.buttonText}>Start Water Conservation Game</Text>
-      </TouchableOpacity>
-      <View style={styles.remindersContainer}>
-        <CardList data={data}/>
-      </View>
-    </View>
-
-  </ScrollView>
+    </ScrollView>
   );
 };
 
@@ -97,14 +91,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
     padding: 20,
   },
-  header: {
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  titleText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
   subtitleContainer: {
     marginTop: 10,
     marginBottom: 20,
@@ -113,11 +99,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-  button: {
+  roundButton: {
     backgroundColor: '#3498db',
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 5,
+    borderRadius: 25, // Adjust the value to control the roundness
     marginBottom: 15,
   },
   buttonText: {
@@ -128,14 +114,6 @@ const styles = StyleSheet.create({
   remindersContainer: {
     marginTop: 20,
     padding: 10,
-  },
-  remindersTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  remindersText: {
-    fontSize: 16,
   },
 });
 
