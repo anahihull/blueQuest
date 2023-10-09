@@ -12,8 +12,8 @@ const HomeScreen = ({ navigation }) => {
     navigation.navigate('Faucet');
   };
 
-  const MyCard = ({title, content}) => {
-    return(
+  const MyCard = ({ title, content }) => {
+    return (
       <Card>
         <Card.Title>{title}</Card.Title>
         <Card.Divider/>
@@ -23,6 +23,7 @@ const HomeScreen = ({ navigation }) => {
       </Card>
     );
   };
+
   const data = [
     {
       title: 'Lesson 1: Seas of Plastic',
@@ -50,34 +51,32 @@ const HomeScreen = ({ navigation }) => {
     }
   ];
 
-  const CardList = ({data}) => {
-    return(
-      <View style={{backgroundColor: 'transparent'}}>
+  const CardList = ({ data }) => {
+    return (
+      <View style={{ backgroundColor: 'transparent' }}>
         {data.map((item, index) => (
           <MyCard
-          key={index}
-          title={item.title}
-          content={item.content}
+            key={index}
+            title={item.title}
+            content={item.content}
           />
         ))}
       </View>
-
     );
   };
 
-
   return (
-  <ScrollView>
-    <View style={styles.container}>
-      <View style={styles.subtitleContainer}>
-        <Text style={styles.subtitleText}>Minigames:</Text>
-      </View>
-      <TouchableOpacity style={styles.button} onPress={navigateToAquaticGame}>
+    <ScrollView>
+      <View style={styles.container}>
+        <View style={styles.subtitleContainer}>
+          <Text style={styles.subtitleText}>Minigames:</Text>
+        </View>
+        <TouchableOpacity style={styles.roundButton} onPress={navigateToAquaticGame}>
         <Image
         source={require('../../assets/cleanocean.png')} style={{width: 150, height: 150}} />
         <Text style={styles.buttonText}>Clean the ocean!</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={navigateToWaterConservationGame}>
+      <TouchableOpacity style={styles.roundButton} onPress={navigateToWaterConservationGame}>
         <Image
         source={require('../../assets/closefaucet.png')} style={{width: 150, height: 150}} />
         <Text style={styles.buttonText}>Close the faucet!</Text>
@@ -85,9 +84,9 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.remindersContainer}>
         <CardList data={data}/>
       </View>
-    </View>
+      </View>
+    </ScrollView>
 
-  </ScrollView>
   );
 };
 
@@ -111,11 +110,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: "#f08080"
   },
-  button: {
+  roundButton: {
     backgroundColor: '#3498db',
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 5,
+    borderRadius: 10, 
     marginBottom: 15,
     alignItems: 'center'
   },
@@ -127,14 +126,6 @@ const styles = StyleSheet.create({
   remindersContainer: {
     marginTop: 20,
     padding: 10,
-  },
-  remindersTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  remindersText: {
-    fontSize: 16,
   },
 });
 
