@@ -1,32 +1,29 @@
 import React from 'react';
-import { View, StyleSheet, Image} from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import * as Location from 'expo-location';
 import { ActivityIndicator, ThemeProvider } from 'react-native-paper';
-import { NativeBaseProvider, Box, extendTheme, Button, Modal, Text, Heading} from "native-base";
-
+import { NativeBaseProvider, Box, extendTheme, Button, Modal, Text, Heading } from "native-base";
 
 const GpsView = () => {
 
-    const theme = extendTheme({
-        colors: {
-          // Add new color
-            primary: {    
-            50: "#00bfff",
-
-          }
-        },
-        config: {
-          // Changing initialColorMode to 'dark'
-          initialColorMode: "dark"
-        }
-      });
+  const theme = extendTheme({
+    colors: {
+      // Add new color
+      primary: {
+        50: "#00bfff",
+      }
+    },
+    config: {
+      // Changing initialColorMode to 'dark'
+      initialColorMode: "dark"
+    }
+  });
 
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [isModalVisible, setModalVisible] = useState(false);
-
 
   useEffect(() => {
     (async () => {
@@ -42,8 +39,8 @@ const GpsView = () => {
     })();
   }, []);
 
-  let coordx ;
-  let coordy ;
+  let coordx;
+  let coordy;
   if (errorMsg) {
     let text = errorMsg;
     coordx = null;
@@ -51,7 +48,7 @@ const GpsView = () => {
   } else if (location) {
     coordx = location.coords.latitude;
     coordy = location.coords.longitude;
-  }else{
+  } else {
     coordx = null;
     coordy = null;
   }
@@ -59,97 +56,95 @@ const GpsView = () => {
   const openCard = () => {
     setModalVisible(true);
   };
-  
+
 
   const closeCard = () => {
     setModalVisible(false);
   };
-  
 
   if (coordx !== null && coordy !== null && coordx !== "undefined") {
     return (
-        <NativeBaseProvider theme={theme}>
-                <MapView
-                style={styles.map}
-                initialRegion={{
-                    latitude: coordx,
-                    longitude: coordy,
-                    latitudeDelta: 2.0000,
-                    longitudeDelta: 2.0000,
-                }}
-                followsUserLocation={true}
-                >
-                <Marker
-                    coordinate={{ latitude: coordx, longitude: coordy }}
-                    title="My location"
-                    description="This is where you live"
-                />
-                </MapView>
+      <NativeBaseProvider theme={theme}>
+        <MapView
+          style={styles.map}
+          initialRegion={{
+            latitude: coordx,
+            longitude: coordy,
+            latitudeDelta: 2.0000,
+            longitudeDelta: 2.0000,
+          }}
+          followsUserLocation={true}
+        >
+          <Marker
+            coordinate={{ latitude: coordx, longitude: coordy }}
+            title="My location"
+            description="This is where you live"
+          />
+        </MapView>
 
-                <Button bg="primary.50" onPress={openCard}>
-                  <Heading style={{color: 'white'}}>
-                  What's up with my water?
-                  </Heading>
-                </Button>
+        <Button bg="#3498db" onPress={openCard}>
+          <Heading style={{ color: 'white' }}>
+            What's up with my water?
+          </Heading>
+        </Button>
 
-                <Modal isOpen={isModalVisible} onClose={closeCard}>
-                  <Modal.Content maxWidth="100%">
-                    <Modal.Header>
-                      <Heading style={{color: '#00bfff'}}>
-                      What's up with my water?
-                        </Heading>
-                    </Modal.Header>
-                    <Modal.Body>
+        <Modal isOpen={isModalVisible} onClose={closeCard}>
+          <Modal.Content maxWidth="100%">
+            <Modal.Header>
+              <Heading style={{ color: '#3498db' }}>
+                What's up with my water?
+              </Heading>
+            </Modal.Header>
+            <Modal.Body>
 
-                      <Heading size="md" style={{paddingTop: 10, color: '#696969'}}>Where does it come from?</Heading>
-                      <Text>Colorado River</Text>
+              <Heading size="md" style={{ paddingTop: 10, color: '#696969' }}>Where does it come from?</Heading>
+              <Text>Colorado River</Text>
 
-                      <Heading  size="md" style={{paddingTop: 10, color: '#696969'}}>What's up with the quality?</Heading>
-                      <Text>For human consumption</Text>
+              <Heading size="md" style={{ paddingTop: 10, color: '#696969' }}>What's up with the quality?</Heading>
+              <Text>For human consumption</Text>
 
-                      <Heading  size="md" style={{paddingTop: 10, color: '#696969'}}>Can I swim today?</Heading>
-                      <Text>There's no swimming places at this area</Text>
+              <Heading size="md" style={{ paddingTop: 10, color: '#696969' }}>Can I swim today?</Heading>
+              <Text>There's no swimming places at this area</Text>
 
-                      <Heading  size="md" style={{paddingTop: 10, color: '#696969'}}>What about marine species?</Heading>
-                      <Box style={{alignItems: 'center', paddingTop: 10}}>
-                        <Image source={require('../../assets/whale.jpg')} style={{width: 240, height: 200}} />
-                        <Heading size="xs" style={{color: '#696969'}}>Vaquit  a Porpoise (Phocoena sinus)</Heading>
-                        <Text style={{color: '#ff0000'}}>Critically endangered</Text>
+              <Heading size="md" style={{ paddingTop: 10, color: '#696969' }}>What about marine species?</Heading>
+              <Box style={{ alignItems: 'center', paddingTop: 10 }}>
+                <Image source={require('../../assets/whale.jpg')} style={{ width: 240, height: 200 }} />
+                <Heading size="xs" style={{ color: '#696969' }}>Vaquit  a Porpoise (Phocoena sinus)</Heading>
+                <Text style={{ color: '#ff0000' }}>Critically endangered</Text>
 
-                        <Image source={require('../../assets/laudturtle.jpg')} style={{width: 240, height: 240}} />
-                        <Heading size="xs" style={{color: '#696969'}}>Leatherback Sea Turtle (Dermochelys coriacea)</Heading>
-                        <Text  style={{color: '#ff0000'}}>Critically endangered</Text>
+                <Image source={require('../../assets/laudturtle.jpg')} style={{ width: 240, height: 240 }} />
+                <Heading size="xs" style={{ color: '#696969' }}>Leatherback Sea Turtle (Dermochelys coriacea)</Heading>
+                <Text style={{ color: '#ff0000' }}>Critically endangered</Text>
 
-                        <Image source={require('../../assets/greenturtle.jpeg')} style={{width: 240, height: 240}} />
-                        <Heading size="xs" style={{color: '#696969'}}>Green Sea Turtle(Chelonia mydas)</Heading>
-                        <Text  style={{color: '#ff0000'}}>Critically endangered</Text>
+                <Image source={require('../../assets/greenturtle.jpeg')} style={{ width: 240, height: 240 }} />
+                <Heading size="xs" style={{ color: '#696969' }}>Green Sea Turtle(Chelonia mydas)</Heading>
+                <Text style={{ color: '#ff0000' }}>Critically endangered</Text>
 
-                        <Image source={require('../../assets/totoaba.jpg')} style={{width: 240, height: 240}} />
-                        <Heading size="xs" style={{color: '#696969'}}>Totoaba (Totoaba macdonaldi)</Heading>
-                        <Text  style={{color: '#ff0000'}}>Critically endangered</Text>
+                <Image source={require('../../assets/totoaba.jpg')} style={{ width: 240, height: 240 }} />
+                <Heading size="xs" style={{ color: '#696969' }}>Totoaba (Totoaba macdonaldi)</Heading>
+                <Text style={{ color: '#ff0000' }}>Critically endangered</Text>
 
-                        <Image source={require('../../assets/bluewhale.jpg')} style={{width: 240, height: 240}} />
-                        <Heading size="xs" style={{color: '#696969'}}git >Blue Whale (Balaenoptera musculus)</Heading>
-                        <Text  style={{color: '#ff0000'}}>Critically endangered</Text>
-                      </Box>
-                    </Modal.Body>
-                    <Modal.Footer>
-                      <Button onPress={closeCard}>Close</Button>
-                    </Modal.Footer>
-                  </Modal.Content>
-                </Modal>
+                <Image source={require('../../assets/bluewhale.jpg')} style={{ width: 240, height: 240 }} />
+                <Heading size="xs" style={{ color: '#696969' }}>Blue Whale (Balaenoptera musculus)</Heading>
+                <Text style={{ color: '#ff0000' }}>Critically endangered</Text>
+              </Box>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button bg="#3498db" onPress={closeCard}>Close</Button>
+            </Modal.Footer>
+          </Modal.Content>
+        </Modal>
 
-            
-        </NativeBaseProvider>
+      </NativeBaseProvider>
     );
   } else {
     return (
-    <NativeBaseProvider>
-      <Box style={styles.loadingContainer}>
-        <ActivityIndicator animating={true} color='black'/>
-        <Text style={styles.loadingText}>Loading...</Text>
-      </Box>   
-    </NativeBaseProvider>
+      <NativeBaseProvider>
+        <Box style={styles.loadingContainer}>
+          <ActivityIndicator animating={true} color='black' />
+          <Text style={styles.loadingText}>Loading...</Text>
+        </Box>
+      </NativeBaseProvider>
     );
   }
 };
@@ -173,14 +168,14 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     position: 'absolute',
-    bottom: 16, // Ajusta esto para la posición vertical deseada
-    alignSelf: 'center', // Centra horizontalmente el botón
+    bottom: 16, // Adjust this for the desired vertical position
+    alignSelf: 'center', // Center the button horizontally
   },
   helpButton: {
     justifyContent: 'center',
     width: '100px',
     height: 'auto',
-    backgroundColor: "#590D8C"
+    backgroundColor: "#3498db"
   },
 });
 

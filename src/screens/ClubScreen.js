@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
     height: 100,
   },
   roundButton: {
-    backgroundColor: 'lightblue',
+    backgroundColor: '#3498db',
     padding: 10,
     borderRadius: 20, // Adjust the value to make it more or less round
     alignItems: 'center',
@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: 'lightblue',
+    backgroundColor: '#3498db',
     alignItems: 'center',
     justifyContent: 'center',
   },
