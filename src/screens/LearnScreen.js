@@ -93,7 +93,7 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#87cefa',
     alignItems: 'center',
     padding: 20,
   },
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   subtitleText: {
     fontSize: 50,
     fontWeight: 'bold',
-    color: "#f08080"
+    color: "#ffffff"
   },
   roundButton: {
     backgroundColor: '#3498db',

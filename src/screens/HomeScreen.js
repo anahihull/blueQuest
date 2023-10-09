@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet, Image} from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import Modal from 'react-native-modal';
 
@@ -92,7 +92,7 @@ const LearnScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Trivia Time!</Text>
+      <Text style={styles.title}>DAILY MISSION</Text>
       <Text style={styles.question}>{question.Question}</Text>
 
       {question.Answers.map((answer, index) => (
@@ -102,6 +102,7 @@ const LearnScreen = () => {
             status={selectedAnswer === answer ? 'checked' : 'unchecked'}
             onPress={() => handleAnswerChange(answer)}
             disabled={showResult}
+            style={styles.radioinput}
           />
           <Text style={styles.optionText}>{answer}</Text>
         </View>
@@ -112,6 +113,9 @@ const LearnScreen = () => {
         onPress={checkAnswer}
         disabled={!selectedAnswer || showResult}
       />
+
+      <Image
+        source={require('../../assets/drop.png')} style={{width: 200, height: 200}} />
 
       {showResult && (
         <Text style={isCorrectAnswer() ? styles.correctText : styles.incorrectText}>
@@ -143,14 +147,28 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 16,
+    backgroundColor: '#87cefa',
   },
   title: {
-    fontSize: 24,
+    fontSize: 40,
+    fontWeight: 'bold',
     marginBottom: 20,
+    color:"#FFFFFF"
   },
   question: {
-    fontSize: 18,
+    fontSize: 20,
+    color: '#FFFFFF',
     marginBottom: 20,
+    fontWeight: 'bold',
+    backgroundColor: '#3498db',
+    borderWidth: 10,
+    borderColor: '#3498db'
+  },
+  radioinput:{
+    backgroundColor:"#3498db",
+    border: '#3498db',
+    borderColor: '#3498db',
+    borderWidth: '#3498db'
   },
   optionContainer: {
     flexDirection: 'row',
@@ -159,7 +177,9 @@ const styles = StyleSheet.create({
   },
   optionText: {
     flex: 1,
-    fontSize: 16,
+    fontSize: 20,
+    color: '#3498db',
+    fontWeight: 'bold'
   },
   correctText: {
     color: 'green',
