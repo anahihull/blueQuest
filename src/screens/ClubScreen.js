@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -11,11 +11,9 @@ import {
 } from 'react-native';
 import {
   Provider as PaperProvider,
-  Appbar,
   Card,
   Title,
   Paragraph,
-  IconButton,
   Dialog,
   Portal,
 } from 'react-native-paper';
@@ -29,8 +27,6 @@ const ClubScreen = () => {
   const [showAddPost, setShowAddPost] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
   const [isEditDialogVisible, setIsEditDialogVisible] = useState(false);
-
-  const nameInputRef = useRef(null);
 
   const toggleAddPost = () => {
     setShowAddPost(!showAddPost);
@@ -71,7 +67,7 @@ const ClubScreen = () => {
       aspect: [4, 3],
     });
   
-    if (!result.canceled) {
+    if (!result.cancelled) {
       // Use the 'assets' array to get selected assets
       setImageAssets([result.assets[0]]);
       console.log('Image Assets:', result.assets); // Add this line for debugging
@@ -116,75 +112,69 @@ const ClubScreen = () => {
 
   return (
     <PaperProvider>
-      <Appbar.Header style={styles.appBar}>
-        <Appbar.Content title="Explorer's Club" titleStyle={styles.title} />
-        <Appbar.Action
-          icon={showAddPost ? 'close' : 'plus'}
+      <ScrollView style={styles.container}>
+        {posts.map((post) => (
+          <TouchableOpacity
+            key={post.id}
+            onPress={() => {
+              setSelectedPost(post);
+              setIsEditDialogVisible(true);
+              setName(post.name);
+              setContent(post.content);
+              setImageAssets(post.imageAssets);
+            }}
+          >
+            <Card style={styles.post}>
+              <Card.Content>
+                <Title style={styles.postAuthor}>{post.name}</Title>
+                <Paragraph style={styles.postContent}>{post.content}</Paragraph>
+                {post.imageAssets.length > 0 && (
+                  <Image
+                    source={{ uri: post.imageAssets[0].uri }}
+                    style={styles.postImage}
+                  />
+                )}
+              </Card.Content>
+            </Card>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+      {showAddPost && (
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder="Your Name"
+            value={name}
+            onChangeText={(text) => setName(text)}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Post Content"
+            value={content}
+            onChangeText={(text) => setContent(text)}
+            style={[styles.input, styles.contentInput]}
+            multiline
+          />
+          <Button title="Pick an Image" onPress={pickImage} />
+          {imageAssets.length > 0 && (
+            <Image
+              source={{ uri: imageAssets[0].uri }}
+              style={styles.previewImage}
+            />
+          )}
+          <View style={styles.buttonContainer}>
+            <Button title="Cancel" onPress={toggleAddPost} style={styles.cancelButton} />
+            <Button title="Add Post" onPress={addPost} />
+          </View>
+        </View>
+      )}
+      {!showAddPost && (
+        <TouchableOpacity
+          style={styles.addButton}
           onPress={toggleAddPost}
-        />
-      </Appbar.Header>
-      <View style={styles.container}>
-        {showAddPost && (
-          <Card style={styles.inputContainer}>
-            <Card.Content>
-              <TextInput
-                ref={nameInputRef}
-                placeholder="Your Name"
-                value={name}
-                onChangeText={(text) => setName(text)}
-                style={styles.input}
-              />
-              <TextInput
-                placeholder="Post Content"
-                value={content}
-                onChangeText={(text) => setContent(text)}
-                style={[styles.input, styles.contentInput]}
-                multiline
-              />
-              <Button title="Pick an Image" onPress={pickImage} />
-              {imageAssets.length > 0 && (
-                <Image
-                  source={{ uri: imageAssets[0].uri }}
-                  style={styles.previewImage}
-                />
-              )}
-            </Card.Content>
-            <Card.Actions>
-              <Button title="Add Post" onPress={addPost} />
-            </Card.Actions>
-          </Card>
-        )}
-        <ScrollView style={styles.postContainer}>
-          {posts.map((post) => (
-            <TouchableOpacity
-              key={post.id}
-              onPress={() => {
-                setSelectedPost(post);
-                setIsEditDialogVisible(true);
-                setName(post.name);
-                setContent(post.content);
-                setImageAssets(post.imageAssets);
-                if (nameInputRef.current) {
-                  nameInputRef.current.focus();
-                }
-              }}
-            >
-              <Card style={styles.post}>
-                <Card.Content>
-                  <Title style={styles.postAuthor}>{post.name}</Title>
-                  <Paragraph style={styles.postContent}>{post.content}</Paragraph>
-                  {post.imageAssets.length > 0 && (
-                    <Image
-                      source={{ uri: post.imageAssets[0].uri }}
-                      style={styles.postImage}
-                    />
-                  )}
-                </Card.Content>
-              </Card>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      </View>
+        >
+          <Text style={styles.addButtonLabel}>+</Text>
+        </TouchableOpacity>
+      )}
       <Portal>
         <Dialog
           visible={isEditDialogVisible}
@@ -193,7 +183,6 @@ const ClubScreen = () => {
           <Dialog.Title>Edit or Delete Post</Dialog.Title>
           <Dialog.Content>
             <TextInput
-              ref={nameInputRef}
               placeholder="Your Name"
               value={name}
               onChangeText={(text) => setName(text)}
@@ -229,44 +218,64 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
-  appBar: {
-    backgroundColor: 'blue', // Change to your desired color
-  },
-  title: {
-    color: 'white', // Change to your desired text color
-  },
   inputContainer: {
     marginBottom: 16,
   },
   input: {
     marginBottom: 8,
-    backgroundColor: '#f0f0f0', // Change to your desired background color
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    paddingLeft: 8,
   },
   contentInput: {
-    minHeight: 100,
+    height: 100,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  cancelButton: {
+    marginRight: 8,
   },
   previewImage: {
-    width: 200, // Adjust the width as needed
-    height: 150, // Adjust the height as needed
+    width: '100%',
+    height: 200,
     resizeMode: 'cover',
+    marginTop: 8,
   },
-  postContainer: {
-    marginTop: 16,
+  addButton: {
+    position: 'absolute',
+    bottom: 16,
+    right: 16,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: 'green',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  addButtonLabel: {
+    fontSize: 24,
+    color: 'white',
   },
   post: {
     marginBottom: 16,
   },
   postAuthor: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
   },
   postContent: {
-    fontSize: 16,
+    fontSize: 14,
+    marginTop: 8,
   },
   postImage: {
-    width: '100%', // Adjust the width as needed
-    height: 200, // Adjust the height as needed
+    width: '100%',
+    height: 200,
     resizeMode: 'cover',
+    marginTop: 8,
   },
 });
 
