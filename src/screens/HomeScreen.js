@@ -72,8 +72,22 @@ const LearnScreen = () => {
     setShowResult(false);
   };
 
-  const navigateToWaterConservationGame = () => {
-    navigation.navigate('WaterConservationGame');
+  const checkAnswer = () => {
+    setShowResult(true);
+
+    if (isCorrectAnswer()) {
+      setModalVisible(true);
+    }
+  };
+
+  const isCorrectAnswer = () => {
+    return selectedAnswer === question['Correct Answer'];
+  };
+
+  const handleNextQuestion = () => {
+    setQuestion(getRandomQuestion());
+    setSelectedAnswer('');
+    setShowResult(false);
   };
 
   return (
