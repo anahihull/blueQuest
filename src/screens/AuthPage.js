@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Alert, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import {Button, NativeBaseProvider} from 'native-base';
 
 const ipAddress = "https://mjrdbqqw-5000.usw3.devtunnels.ms/";
 
@@ -67,8 +68,14 @@ const AuthPage = () => {
   };
 
   return (
+    <NativeBaseProvider>
+
     <View style={styles.container}>
-      <Text style={styles.title}>{isLogin ? 'Login' : 'Create Account'}</Text>
+
+        <Image
+          source={require('../../assets/logo.png')} // Replace with the path to your logo
+          style={styles.logo}
+        />
 
       <TextInput 
         placeholder="Username" 
@@ -85,15 +92,21 @@ const AuthPage = () => {
         style={styles.input}
       />
 
-      <Button 
-        title={isLogin ? 'Login' : 'Register'}
-        onPress={authenticateUser}
-      />
+        <Button 
+          onPress={authenticateUser}
+          bg="#3498db"
+          style={styles.button}
+        >
+          <Text style={styles.buttonText}>{isLogin ? 'Login' : 'Register'}</Text>
+        </Button>
+
+
 
       <Text style={styles.toggleText} onPress={() => setIsLogin(!isLogin)}>
         {isLogin ? 'Need an account? Register' : 'Have an account? Login'}
       </Text>
     </View>
+    </NativeBaseProvider>
   );
 };
 
@@ -103,23 +116,32 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#87cefa',
   },
   title: {
-    fontSize: 24,
+    fontSize: 25,
     marginBottom: 20,
+    color: '#FFFFFF'
+  },
+  buttonText:{
+    color: "#FFFFFF"
   },
   input: {
     height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
+    borderColor: '#FFFFFF',
+    borderWidth: 2,
     marginBottom: 20,
     width: '100%',
     paddingHorizontal: 8,
   },
+  logo: {
+    width: 300,
+    height: 150,
+    resizeMode: 'center'
+  },
   toggleText: {
     marginTop: 20,
-    color: 'blue',
+    color: 'white',
   },
 });
 

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, Image} from 'react-native';
+import { View, Text, StyleSheet, Image} from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import Modal from 'react-native-modal';
+import {Button, NativeBaseProvider} from 'native-base'
 
 const Questions = [
   {
@@ -91,6 +92,8 @@ const LearnScreen = () => {
   };
 
   return (
+    <NativeBaseProvider>
+
     <View style={styles.container}>
       <Text style={styles.title}>DAILY MISSION</Text>
       <Text style={styles.question}>{question.Question}</Text>
@@ -109,10 +112,13 @@ const LearnScreen = () => {
       ))}
 
       <Button
-        title="Verify Answer"
         onPress={checkAnswer}
+        style={styles.verify}
         disabled={!selectedAnswer || showResult}
-      />
+        bg="#3498db"
+      >
+        VERIFY
+      </Button>
 
       <Image
         source={require('../../assets/drop.png')} style={{width: 200, height: 200}} />
@@ -124,20 +130,18 @@ const LearnScreen = () => {
       )}
 
       {showResult && !isCorrectAnswer() && (
-        <Button
-          title="Try again"
-          onPress={handleNextQuestion}
-        />
+        <Button onPress={handleNextQuestion} bg="#3498db">Try again</Button>
       )}
 
       <Modal isVisible={isModalVisible}>
         <View style={styles.modalContainer}>
           <Text style={styles.modalText}>Congratulations!</Text>
           <Text style={styles.modalText}>You unlocked a new lesson.</Text>
-          <Button title="Close" onPress={() => setModalVisible(false)} />
+          <Button bg="#3498db" onPress={() => setModalVisible(false)}>CLOSE</Button>
         </View>
       </Modal>
     </View>
+    </NativeBaseProvider>
   );
 };
 
@@ -182,12 +186,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   correctText: {
-    color: 'green',
+    color: '#FFFFFF',
     fontSize: 16,
     marginTop: 10,
   },
   incorrectText: {
-    color: 'red',
+    color: '#FFFFFF',
     fontSize: 16,
     marginTop: 10,
   },

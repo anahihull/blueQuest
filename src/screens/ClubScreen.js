@@ -4,19 +4,18 @@ import {
   Text,
   TextInput,
   Button,
-  Image,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
 import {
   Provider as PaperProvider,
-  Card,
   Title,
   Paragraph,
   Dialog,
   Portal,
 } from 'react-native-paper';
+import {Card, Image} from 'react-native-elements';
 import * as ImagePicker from 'expo-image-picker';
 
 const ClubScreen = () => {
@@ -27,6 +26,52 @@ const ClubScreen = () => {
   const [showAddPost, setShowAddPost] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
   const [isEditDialogVisible, setIsEditDialogVisible] = useState(false);
+
+  const MyCard = ({ title, content, image }) => {
+    return (
+      <Card>
+        <Card.Title>{title}</Card.Title>
+        <Card.Divider/>
+        <Text style={{ marginBottom: 10 }}>
+          {content}
+        </Text>
+        <Card.Image source={image} style={{borderRadius: 10}} />
+      </Card>
+    );
+  };
+
+  const data = [
+    {
+      title: 'Discovering the Deep: Your Most Exciting Underwater Caves Experiences',
+      content: ' Last month, I explored the submerged caves off the coast of Mexico. The stunning stalactites and the eerie stillness of the place were breathtaking! Has anyone else dove here before?',
+      image: { uri: 'https://i.pinimg.com/564x/09/e6/7b/09e67ba7ae7e957f5e92d90daa47caf2.jpg' }
+    },
+    {
+      title: 'Safety First: Share Your Tips for Safe Deep-sea Diving',
+      content: 'Always, always, always do a thorough equipment check before descending. A minor malfunction can be a major issue in the depths.',
+      image: { uri: 'https://i.pinimg.com/564x/9a/11/1c/9a111c187f7eb5eceb3b556c8a8255d5.jpg' }
+    },
+    {
+      title: 'Mysterious Ocean Sounds: Your Experiences and Theories',
+      content: '"I once heard a low-frequency hum in the Pacific that lasted about a minute. Still puzzled about what it could be. Any similar experiences?',
+      image: { uri: 'https://i.pinimg.com/564x/9e/6e/68/9e6e68c0e7313a81bf97cc23bc27d45e.jpg' }
+    }
+  ];
+
+  const CardList = ({ data }) => {
+    return (
+      <View style={{ backgroundColor: 'transparent' }}>
+        {data.map((item, index) => (
+          <MyCard
+          key={index}
+          title={item.title}
+          content={item.content}
+          image={item.image}
+          />
+        ))}
+      </View>
+    );
+  };
 
   const toggleAddPost = () => {
     setShowAddPost(!showAddPost);
@@ -113,6 +158,9 @@ const ClubScreen = () => {
   return (
     <PaperProvider>
       <ScrollView style={styles.container}>
+      <View>
+        <CardList data={data}/>
+      </View>
         {posts.map((post) => (
           <TouchableOpacity
             key={post.id}
@@ -213,7 +261,7 @@ const ClubScreen = () => {
             />
             <TouchableOpacity
               onPress={pickImage}
-              style={styles.roundButton} // Apply the round button style here
+              style={styles.roundButton} 
             >
               <Text style={styles.roundButtonText}>Pick an Image</Text>
             </TouchableOpacity>
@@ -228,13 +276,13 @@ const ClubScreen = () => {
           
             <TouchableOpacity
               onPress={handleDeletePost}
-              style={styles.roundButton} // Apply the round button style here
+              style={styles.roundButton} 
             >
               <Text style={styles.roundButtonText}>Delete</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={handleEditPost}
-              style={styles.roundButton} // Apply the round button style here
+              style={styles.roundButton} 
             >
               <Text style={styles.roundButtonText}>Done</Text>
             </TouchableOpacity>
@@ -257,8 +305,6 @@ const styles = StyleSheet.create({
   input: {
     marginBottom: 8,
     height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
     paddingLeft: 8,
   },
   contentInput: {
