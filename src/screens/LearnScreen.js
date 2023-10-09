@@ -1,8 +1,7 @@
-
-
-
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import {Card} from 'react-native-elements';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const HomeScreen = ({ navigation }) => {
   const navigateToAquaticGame = () => {
@@ -13,11 +12,67 @@ const HomeScreen = ({ navigation }) => {
     navigation.navigate('WaterConservationGame');
   };
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.titleText}>Home</Text>
+  const MyCard = ({title, content}) => {
+    return(
+      <Card>
+        <Card.Title>{title}</Card.Title>
+        <Card.Divider/>
+        {/* <Card.Image source={...}> */}
+          {/* Coloca alguna imagen si es necesario */}
+        {/* </Card.Image> */}
+        <Text style={{ marginBottom: 10 }}>
+          {content}
+        </Text>
+        {/* Puedes añadir botones u otros elementos aquí */}
+      </Card>
+    );
+  };
+  const data = [
+    {
+      title: 'Lesson 1: Seas of Plastic',
+      content: ' Oceanic waters are being inundated with millions of tons of plastic waste annually, posing a threat to marine life and ecosystems. Adopting responsible consumption habits and enhancing waste management systems is imperative to shield our seas.'
+    },
+    {
+      title: 'Lesson 2: Ocean Acidification',
+      content: 'The ocean absorption of CO2 is altering its pH, negatively impacting marine organisms, especially those reliant on calcification like corals and mollusks. It is vital to mitigate greenhouse gas emissions to safeguard marine biodiversity.'
+    },
+    {
+      title: 'Lesson 3: The Significance of Marine Protected Areas',
+      content: 'Establishing and maintaining Marine Protected Areas (MPAs) is vital for preserving marine ecosystems and the species that inhabit them. These zones serve as safe havens for biodiversity and help sustain fish populations, benefiting fishing communities as well.'
+    },
+    {
+      title: 'Lesson 4: Overflow of Contaminants into the Ocean',
+      content: 'Oil spills, agricultural fertilizer runoff, and other pollutants regularly enter the ocean, causing long-term damage to marine fauna and flora. Implementing cleaner industrial and agricultural practices is vital to curtail ocean pollution.'
+    },
+    {
+      title: 'Lesson 5: Overfishing: An Ocean on the Brink of Depletion',
+      content: 'Overexploitation of fishing resources threatens the sustainability of oceanic ecosystems and the food security of millions of people. Adopting sustainable fishing practices and strict regulations is essential for preserving marine species.'
+    },
+    {
+      title: 'Lesson 6: The Crucial Role of Mangroves',
+      content: 'Mangroves play a pivotal role in protecting coastlines, nurturing fish populations, and sequestering carbon, providing vital services to both marine ecosystems and human communities. Protecting and rehabilitating mangrove forests is key to maintaining these benefits and supporting healthy oceans.'
+    }
+  ];
+
+  const CardList = ({data}) => {
+    return(
+      <View style={{backgroundColor: 'transparent'}}>
+        {data.map((item, index) => (
+          <MyCard
+          key={index}
+          title={item.title}
+          content={item.content}
+          />
+        ))}
       </View>
+
+    );
+  };
+
+
+  return (
+  <ScrollView>
+    <View style={styles.container}>
       <View style={styles.subtitleContainer}>
         <Text style={styles.subtitleText}>Minigames:</Text>
       </View>
@@ -28,12 +83,11 @@ const HomeScreen = ({ navigation }) => {
         <Text style={styles.buttonText}>Start Water Conservation Game</Text>
       </TouchableOpacity>
       <View style={styles.remindersContainer}>
-        <Text style={styles.remindersTitle}>Reminders & Announcements:</Text>
-        <Text style={styles.remindersText}>
-        Every time we lather on sunblock, we're protecting our skin from harmful UV rays, but let's not forget about the hidden impact on our delicate underwater ecosystems. Many sunscreens contain zinc oxide, which, while effective at safeguarding our skin, can be detrimental to coral reefs. As we frolic in crystal-clear waters, tiny particles of zinc wash off our bodies and end up in the ocean, where they can disrupt coral's natural defenses, contribute to coral bleaching, and harm marine life. The next time you enjoy the sun and sea, consider using reef-friendly sunblock formulations that protect you and our precious coral reefs, ensuring that future generations can continue to marvel at their beauty beneath the waves.
-        </Text>
+        <CardList data={data}/>
       </View>
     </View>
+
+  </ScrollView>
   );
 };
 
@@ -73,13 +127,7 @@ const styles = StyleSheet.create({
   },
   remindersContainer: {
     marginTop: 20,
-    borderTopWidth: 1,
-    borderColor: '#ddd',
     padding: 10,
-    backgroundColor: '#fff', // Added background color
-    borderRadius: 10, // Added border radius
-    borderWidth: 2, // Added border width
-    borderColor: '#3498db', // Added border color
   },
   remindersTitle: {
     fontSize: 18,
